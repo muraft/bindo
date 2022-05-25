@@ -14,7 +14,7 @@ Untuk menambahkan compiler Bindo caranya seperti menambahkan library JavaScript 
   ```
 4. Kemudian kamu bisa kreasikan kode di atas seperti menjalankan kode bindo sesuai dengan input user di website mu atau sesuai kreasimu. Kunjungi [index.html]() untuk melihat penerapannya
 
-#Setup tambahan bindo
+# Setup tambahan bindo
 Kamu bisa mensetup beberapa perilaku bindo (untuk tahap ini baru ada satu) sebelum mulai menjalankan fungsi bindo.jalankan(), di antaranya:
 ## bindo.console (Default: true)
   ```
