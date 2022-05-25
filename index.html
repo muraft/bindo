@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Bindo compiler</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <style>
+      #output{
+        border: 1px solid black;
+      }
+    </style>
+  </head>
+  <body>
+    <textarea id="kode"></textarea>
+    <br>
+    <button id="tombolCompile">Jalankan Kode</button>
+    <br>
+    <br>
+    Hasil:
+    <div id="output"></div>
+
+    <script src="bindoCompiler.js"></script>
+    <script>
+    bindo.konsol=false;
+    bindo.output=document.getElementById("output");
+      document.getElementById("tombolCompile").onclick=()=>{
+        bindo.jalankan(document.getElementById("kode").value);
+      }
+    </script>
+  </body>
+</html>
