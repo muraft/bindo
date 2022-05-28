@@ -6,6 +6,7 @@ bindo.init=()=>{
   bindo.variabel = new Map(),
   bindo.proses = {
     indexBaris:0,
+    dataBaris:[],
     stringOutput:""
   }
 }
@@ -18,16 +19,16 @@ bindo.jalankan= kode=>{
   {
     let isiBaris=baris[bindo.proses.indexBaris];
     bindo.proses.indexBaris++;
-    if(isiBaris.trim()=='')continue;
+    if(isiBaris.trim()=='' || isiBaris.startsWith("//"))continue;
     let ini = bindo.sistem.bongkar(isiBaris);
     if(ini.perintah=="ingat")hasil=bindo.sintaks.ingat(ini.parameter);
     else if(ini.perintah=="tulis" || ini.perintah=="tampilkan")hasil=bindo.sintaks.tulis(ini.parameter);
-    else if(ini.perintah=="" || ini.perintah.startsWith("//"))hasil=true;
+    else if(ini.perintah=="jika" || ini.perintah=="kalau")hasil=bindo.sintaks.jika(ini.parameter);
     else{
       bindo.sistem.error('Perintah "'+ini.perintah+'" tidak tersedia dalam bahasa pemrograman ini.')
       hasil=false;
     }
-
+    bindo.proses.dataBaris.push(ini);
     if(!hasil)break;
   }
   if(!bindo.konsol)bindo.output.innerHTML=bindo.proses.stringOutput;
@@ -43,7 +44,7 @@ bindo.sistem.bongkar= baris=>{
   baris.split('"').forEach((v,i)=>{
     if(i%2==0){
       v.trim().split(" ").forEach(w=>{
-        let tipe = (/[a-zA-Z!@#$%^&()_=\[\]{};':"\\|,.<>?$]/).test(w)==false && w.length>0?"angka":"keyword";
+        let tipe = (/[a-zA-Z!@#$%^&()_=\[\]{};':"\\|,.<>?$/]/).test(w)==false && w.length>0?"angka":"keyword";
         let isi = tipe=="angka"?parseFloat(eval(w)):w;
         hasil.push({isi,tipe});
       })
@@ -131,5 +132,10 @@ bindo.sintaks.tulis=parameter=>{
   else{kalimat=konten}
   bindo.sistem.tampilkan(kalimat)
 
+  return true;
+}
+
+bindo.sintaks.jika=parameter=>{
+  
   return true;
 }
