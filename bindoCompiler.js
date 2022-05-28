@@ -63,7 +63,7 @@ bindo.sistem.bongkar= baris=>{
 }
 
 bindo.sistem.error= (pesan)=>{
-  let info='Terdapat kesalahan pada baris ke-'+(bindo.proses.indexBaris+1)+': ';
+  let info='Terdapat kesalahan pada baris ke-'+bindo.proses.indexBaris+': ';
   if(bindo.konsol)console.error(info+pesan);
   else{
     bindo.proses.stringOutput+='<font color="red">'+info+pesan+'</font><br>';
