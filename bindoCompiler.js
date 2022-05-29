@@ -7,7 +7,9 @@ bindo.init=()=>{
   bindo.proses = {
     indexBaris:0,
     dataBaris:[],
-    stringOutput:""
+    stringOutput:"",
+    kedalamanJika:0,
+    hasilJika:null
   }
 }
 
@@ -107,10 +109,10 @@ bindo.sintaks.ingat=parameter=>{
     bindo.variabel.set(namaVariabel,bindo.variabel.get(isi))
   }
   else{
-    if(!bindo.variabel.has(namaVariabel))bindo.variabel.set(namaVariabel,{isi,konstan});
+    if(!bindo.variabel.has(namaVariabel))bindo.variabel.set(namaVariabel,{isi,konstan,tipe:parameter[2].tipe});
     else{
       if(bindo.variabel.get(namaVariabel).konstan)return bindo.sistem.error("Variabel "+namaVariabel+" adalah konstan sehingga isinya tidak bisa diubah.");
-      else{bindo.variabel.set(namaVariabel,{isi,konstan})}
+      else{bindo.variabel.set(namaVariabel,{isi,konstan,tipe:parameter[2].tipe})}
     }
   }
 
@@ -136,6 +138,40 @@ bindo.sintaks.tulis=parameter=>{
 }
 
 bindo.sintaks.jika=parameter=>{
+  if(parameter.length<3){
+    return bindo.sistem.error("Perintah ini membutuhkan 3 parameter.")
+  }
+  let pernyataan=parameter[1].isi
+  let variabel1,variabel2;
+  if(parameter[0].tipe=="keyword"){
+    if(!bindo.variabel.has(parameter[0].isi))return bindo.sistem.error('Tidak ada variabel yang bernama "'+parameter[0].isi+'"');
+    variabel1=bindo.variabel.get(parameter[0].isi);
+  }
+  else{variabel1=parameter[0]}
+  if(parameter[2].tipe=="keyword"){
+    if(!bindo.variabel.has(parameter[2].isi))return bindo.sistem.error('Tidak ada variabel yang bernama "'+parameter[2].isi+'"');
+    variabel2=bindo.variabel.get(parameter[2].isi);
+  }
+  else{variabel2=parameter[2]}
+  
+  if(pernyataan=="sama-dengan" || pernyataan=="=" || pernyataan=="=="){
+    if(variabel1.isi==variabel2.isi)bindo.proses.hasilJika=true;
+    else{bindo.proses.hasilJika=false}
+  }
+  if(pernyataan=="lebih-dari" || pernyataan==">"){
+    if(variabel1.tipe!="angka" || variabel2.tipe!="angka")return bindo.sistem.error("Tidak bisa menggunakan tanda lebih dari karena variabel yang dibandingkan bukanlah angka")
+    if(variabel1.isi>variabel2.isi)bindo.proses.hasilJika=true;
+    else{bindo.proses.hasilJika=false}
+  }
+  if(pernyataan=="kurang-dari" || pernyataan=="<"){
+    if(variabel1.tipe!="angka" || variabel2.tipe!="angka")return bindo.sistem.error("Tidak bisa menggunakan tanda kurang dari karena variabel yang dibandingkan bukanlah angka")
+    if(variabel1.isi<variabel2.isi)bindo.proses.hasilJika=true;
+    else{bindo.proses.hasilJika=false}
+  }
+  if(pernyataan=="berbeda-dengan" || pernyataan=="!="){
+    if(variabel1.isi!=variabel2.isi)bindo.proses.hasilJika=true;
+    else{bindo.proses.hasilJika=false}
+  }
   
   return true;
 }
