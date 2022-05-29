@@ -1,15 +1,15 @@
 const bindo={konsol:true,output:null,sistem:{}};
 
 bindo.init=()=>{
-  if(!bindo.konsol && !(bindo.output instanceof Element))throw new Error("bindo.output harus berisi elemen HTML")
-  if(bindo.konsol)console.clear()
-  bindo.variabel = new Map(),
+  if(!bindo.konsol && !(bindo.output instanceof Element))throw new Error("bindo.output harus berisi elemen HTML");
+  if(bindo.konsol)console.clear();
+  bindo.variabel = new Map();
   bindo.proses = {
     indexBaris:0,
     dataBaris:[],
     stringOutput:"",
     kedalamanJika:0,
-    hasilJika:null
+    hasilJika:[null]
   }
 }
 
@@ -26,6 +26,7 @@ bindo.jalankan= kode=>{
     if(ini.perintah=="ingat")hasil=bindo.sintaks.ingat(ini.parameter);
     else if(ini.perintah=="tulis" || ini.perintah=="tampilkan")hasil=bindo.sintaks.tulis(ini.parameter);
     else if(ini.perintah=="jika" || ini.perintah=="kalau")hasil=bindo.sintaks.jika(ini.parameter);
+    else if(ini.perintah=="akhiri")hasil=bindo.sintaks.akhiri(ini.parameter);
     else{
       bindo.sistem.error('Perintah "'+ini.perintah+'" tidak tersedia dalam bahasa pemrograman ini.')
       hasil=false;
@@ -154,24 +155,41 @@ bindo.sintaks.jika=parameter=>{
   }
   else{variabel2=parameter[2]}
   
+  let hasil;
   if(pernyataan=="sama-dengan" || pernyataan=="=" || pernyataan=="=="){
-    if(variabel1.isi==variabel2.isi)bindo.proses.hasilJika=true;
-    else{bindo.proses.hasilJika=false}
+    if(variabel1.isi==variabel2.isi)hasil=true;
+    else{hasil=false}
   }
-  if(pernyataan=="lebih-dari" || pernyataan==">"){
+  else if(pernyataan=="lebih-dari" || pernyataan==">"){
     if(variabel1.tipe!="angka" || variabel2.tipe!="angka")return bindo.sistem.error("Tidak bisa menggunakan tanda lebih dari karena variabel yang dibandingkan bukanlah angka")
-    if(variabel1.isi>variabel2.isi)bindo.proses.hasilJika=true;
-    else{bindo.proses.hasilJika=false}
+    if(variabel1.isi>variabel2.isi)hasil=true;
+    else{hasil=false}
   }
-  if(pernyataan=="kurang-dari" || pernyataan=="<"){
+  else if(pernyataan=="kurang-dari" || pernyataan=="<"){
     if(variabel1.tipe!="angka" || variabel2.tipe!="angka")return bindo.sistem.error("Tidak bisa menggunakan tanda kurang dari karena variabel yang dibandingkan bukanlah angka")
-    if(variabel1.isi<variabel2.isi)bindo.proses.hasilJika=true;
-    else{bindo.proses.hasilJika=false}
+    if(variabel1.isi<variabel2.isi)hasil=true;
+    else{hasil=false}
   }
-  if(pernyataan=="berbeda-dengan" || pernyataan=="!="){
-    if(variabel1.isi!=variabel2.isi)bindo.proses.hasilJika=true;
-    else{bindo.proses.hasilJika=false}
+  else if(pernyataan=="berbeda-dengan" || pernyataan=="!="){
+    if(variabel1.isi!=variabel2.isi)hasil=true;
+    else{hasil=false}
   }
+  else{return bindo.sistem.error('Pernyataan "'+pernyataan+'" bukanlah pernyataan yang tepat untuk membandingkan dua variabel')}
+  
+  bindo.proses.kedalamanJika++;
+  bindo.proses.hasilJika[bindo.proses.kedalamanJika]=hasil;
+  return true;
+}
+
+bindo.sintaks.akhiri=parameter=>{
+  if(parameter.length<1){
+    return bindo.sistem.error("Perintah ini membutuhkan 1 parameter.")
+  }
+  if(parameter[0].isi=="jika"){
+    if(bindo.proses.kedalamanJika<=0)return bindo.sistem.error('Tidak bisa mengakhiri perintah "jika" karena tidak ada perintah tersebut yang sedang berjalan')
+    bindo.proses.kedalamanJika--;
+  }
+  else{return bindo.sistem.error('"'+parameter[0].isi+'" bukanlah sesuatu yang bisa diakhiri')}
   
   return true;
 }
