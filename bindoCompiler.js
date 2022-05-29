@@ -42,12 +42,12 @@ bindo.jalankan= kode=>{
 // #####Private Functions#####
 bindo.sistem = {};
 
-bindo.sistem.bongkar= baris=>{
+bindo.sistem.bongkar=baris=>{
   let hasil = [];
   baris.split('"').forEach((v,i)=>{
     if(i%2==0){
       v.trim().split(" ").forEach(w=>{
-        let tipe = (/[a-zA-Z!@#$%^&()_=\[\]{};':"\\|,.<>?$/]/).test(w)==false && w.length>0?"angka":"keyword";
+        let tipe = (/[a-zA-Z!@#$%^&()_=\[\]{};':"\\|,.<>?$]/).test(w)==false && w.length>1?"angka":"keyword";
         let isi = tipe=="angka"?parseFloat(eval(w)):w;
         hasil.push({isi,tipe});
       })
@@ -66,7 +66,7 @@ bindo.sistem.bongkar= baris=>{
   }
 }
 
-bindo.sistem.error= (pesan)=>{
+bindo.sistem.error=pesan=>{
   let info='Terdapat kesalahan pada baris ke-'+bindo.proses.indexBaris+': ';
   if(bindo.konsol)console.error(info+pesan);
   else{
@@ -75,11 +75,19 @@ bindo.sistem.error= (pesan)=>{
   return false;
 }
 
-bindo.sistem.tampilkan= kalimat=>{
+bindo.sistem.tampilkan=kalimat=>{
   if(bindo.konsol)console.log(kalimat);
   else{
     bindo.proses.stringOutput+=kalimat+"<br>";
   }
+}
+
+bindo.sistem.dapatkan=konten=>{
+  if(konten.tipe=="keyword"){
+    if(!bindo.variabel.has(konten.isi))return null;
+    return bindo.variabel.get(konten.isi);
+  }
+  return konten;
 }
 
 // ####Sintaks####
@@ -125,15 +133,9 @@ bindo.sintaks.tulis=parameter=>{
     return bindo.sistem.error("Perintah ini membutuhkan 1 parameter.")
   }
 
-  let konten = parameter[0].isi;
-
-  let kalimat;
-  if(parameter[0].tipe=="keyword"){
-    if(!bindo.variabel.has(konten))return bindo.sistem.error('Tidak ada variabel yang bernama "'+konten+'"');
-    kalimat=bindo.variabel.get(konten).isi;
-  }
-  else{kalimat=konten}
-  bindo.sistem.tampilkan(kalimat)
+  let konten=bindo.sistem.dapatkan(parameter[0]);
+  if(konten==null)return bindo.sistem.error('Tidak ada variabel yang bernama "'+parameter[0].isi+'"');
+  bindo.sistem.tampilkan(konten.isi)
 
   return true;
 }
@@ -143,17 +145,10 @@ bindo.sintaks.jika=parameter=>{
     return bindo.sistem.error("Perintah ini membutuhkan 3 parameter.")
   }
   let pernyataan=parameter[1].isi
-  let variabel1,variabel2;
-  if(parameter[0].tipe=="keyword"){
-    if(!bindo.variabel.has(parameter[0].isi))return bindo.sistem.error('Tidak ada variabel yang bernama "'+parameter[0].isi+'"');
-    variabel1=bindo.variabel.get(parameter[0].isi);
-  }
-  else{variabel1=parameter[0]}
-  if(parameter[2].tipe=="keyword"){
-    if(!bindo.variabel.has(parameter[2].isi))return bindo.sistem.error('Tidak ada variabel yang bernama "'+parameter[2].isi+'"');
-    variabel2=bindo.variabel.get(parameter[2].isi);
-  }
-  else{variabel2=parameter[2]}
+  let variabel1=bindo.sistem.dapatkan(parameter[0])
+  if(variabel1==null)return bindo.sistem.error('Tidak ada variabel yang bernama "'+parameter[0].isi+'"');
+  let variabel2=bindo.sistem.dapatkan(parameter[2])
+  if(variabel2==null)return bindo.sistem.error('Tidak ada variabel yang bernama "'+parameter[2].isi+'"');
   
   let hasil;
   if(pernyataan=="sama-dengan" || pernyataan=="=" || pernyataan=="=="){
