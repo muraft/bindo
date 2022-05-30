@@ -47,7 +47,7 @@ bindo.sistem.bongkar=baris=>{
   baris.split('"').forEach((v,i)=>{
     if(i%2==0){
       v.trim().split(" ").forEach(w=>{
-        let tipe = (/[a-zA-Z!@#$%^&()_=\[\]{};':"\\|,.<>?$]/).test(w)==false && w.length>1?"angka":"keyword";
+        let tipe = (/[a-zA-Z!@#$%^&()_=\[\]{};':"\\|,.<>?$]/).test(w)==false && w.length>0 && (/\d/).test(w)==true?"angka":"keyword";
         let isi = tipe=="angka"?parseFloat(eval(w)):w;
         hasil.push({isi,tipe});
       })
@@ -111,20 +111,15 @@ bindo.sintaks.ingat=parameter=>{
     return bindo.sistem.error(konjungsi+' bukanlah kongjungsi yang tepat, pililah "adalah" atau "pasti"');
   }
 
-  let isi = parameter[2].isi;
-
-  if(parameter[2].tipe=="keyword"){
-    if(!bindo.variabel.has(isi))return bindo.sistem.error('Tidak ada variabel yang bernama "'+isi+'"');
-    bindo.variabel.set(namaVariabel,bindo.variabel.get(isi))
-  }
-  else{
-    if(!bindo.variabel.has(namaVariabel))bindo.variabel.set(namaVariabel,{isi,konstan,tipe:parameter[2].tipe});
-    else{
-      if(bindo.variabel.get(namaVariabel).konstan)return bindo.sistem.error("Variabel "+namaVariabel+" adalah konstan sehingga isinya tidak bisa diubah.");
-      else{bindo.variabel.set(namaVariabel,{isi,konstan,tipe:parameter[2].tipe})}
-    }
-  }
-
+  let isi = parameter[2];
+  
+  let konten = bindo.sistem.dapatkan(isi);
+  if(konten==null)return bindo.sistem.error('Tidak ada variabel yang bernama "'+isi.isi+'"');
+  console.log(konten)
+  if(bindo.variabel.has(namaVariabel) && bindo.variabel.get(namaVariabel).konstan)return bindo.sistem.error("Variabel "+namaVariabel+" adalah konstan sehingga isinya tidak bisa diubah.");
+  konten.konstan=konstan;
+  bindo.variabel.set(namaVariabel,konten);
+  
   return true;
 }
 
