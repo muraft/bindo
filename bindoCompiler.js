@@ -17,12 +17,13 @@ bindo.jalankan= kode=>{
   bindo.init();
 
   let baris = kode.split('\n')
-  while(bindo.proses.indexBaris<baris.length)
+  for(bindo.proses.indexBaris;bindo.proses.indexBaris<baris.length;bindo.proses.indexBaris++)
   {
     let isiBaris=baris[bindo.proses.indexBaris];
-    bindo.proses.indexBaris++;
     if(isiBaris.trim()=='' || isiBaris.startsWith("//"))continue;
     let ini = bindo.sistem.bongkar(isiBaris);
+    if(bindo.proses.hasilJika[bindo.proses.kedalamanJika]===false && ini.perintah!="akhiri")continue;
+    
     if(ini.perintah=="ingat")hasil=bindo.sintaks.ingat(ini.parameter);
     else if(ini.perintah=="tulis" || ini.perintah=="tampilkan")hasil=bindo.sintaks.tulis(ini.parameter);
     else if(ini.perintah=="jika" || ini.perintah=="kalau")hasil=bindo.sintaks.jika(ini.parameter);
@@ -67,7 +68,7 @@ bindo.sistem.bongkar=baris=>{
 }
 
 bindo.sistem.error=pesan=>{
-  let info='Terdapat kesalahan pada baris ke-'+bindo.proses.indexBaris+': ';
+  let info='Terdapat kesalahan pada baris ke-'+(bindo.proses.indexBaris+1)+': ';
   if(bindo.konsol)console.error(info+pesan);
   else{
     bindo.proses.stringOutput+='<font color="red">'+info+pesan+'</font><br>';
@@ -146,7 +147,7 @@ bindo.sintaks.jika=parameter=>{
   if(variabel2==null)return bindo.sistem.error('Tidak ada variabel yang bernama "'+parameter[2].isi+'"');
   
   let hasil;
-  if(pernyataan=="sama-dengan" || pernyataan=="=" || pernyataan=="=="){
+  if(pernyataan=="sama-dengan" || pernyataan=="=" || pernyataan=="==" || pernyataan=="adalah"){
     if(variabel1.isi==variabel2.isi)hasil=true;
     else{hasil=false}
   }
@@ -160,7 +161,7 @@ bindo.sintaks.jika=parameter=>{
     if(variabel1.isi<variabel2.isi)hasil=true;
     else{hasil=false}
   }
-  else if(pernyataan=="berbeda-dengan" || pernyataan=="!="){
+  else if(pernyataan=="berbeda-dengan" || pernyataan=="!=" || pernyataan=="bukan"){
     if(variabel1.isi!=variabel2.isi)hasil=true;
     else{hasil=false}
   }
