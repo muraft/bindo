@@ -22,3 +22,4 @@ Untuk mencoba Bindo secara online, kamu bisa kunjungi https://muraft.great-site.
 - Untuk mempelajari dasar-dasar bahasa ini, kunjungi [tutorial.md](tutorial.md)
 - Untuk memlihat daftar perintah di bahasa ini dan penggunaannya, kunjungi [perintah.md](perintah.md)
 - Untuk menggunakan dan menyetel compiler Bindo di websitemu, kunjungi [penyetelan.md](penyetelan.md)
+- Untuk melihat changelog dan versi terbaru bahasa ini, kunjungi [releases](https://github.com/coolraptor08/bindo/releases)
