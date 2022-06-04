@@ -102,7 +102,7 @@ bindo.sintaks.ingat=parameter=>{
   if(parameter[0].tipe=="string")return bindo.sistem.error("Nama variabel tidak boleh string")
   if(parameter[0].tipe=="angka")return bindo.sistem.error("Nama variabel tidak boleh angka")
   let namaVariabel = parameter[0].isi;
-  if(/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(namaVariabel))return bindo.sistem.error("Nama variabel tidak boleh mengandung simbol");
+  if(/[!@#$%^&*()+\-=\[\]{};':"\\|,.<>\/?]/.test(namaVariabel))return bindo.sistem.error("Nama variabel tidak boleh mengandung simbol");
 
   let konjungsi = parameter[1].isi.toLowerCase();
   let konstan;

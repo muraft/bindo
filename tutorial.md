@@ -23,7 +23,7 @@ Meskipun kode di atas tidak akan menampilkan apa apa, sebenarnya sistem bindo da
 
 ```
 ingat favorit adalah "teh"
-tampilkan favorit
+tulis favorit
 ```
 
 maka hasilnya adalah
@@ -37,7 +37,7 @@ Jika kamu ingin mengganti isi variabel, kamu bisa mengulang perintah serupa namu
 ```
 ingat favorit adalah "teh"
 ingat favorit adalah "kopi"
-tampilkan favorit
+tulis favorit
 ```
 
 maka hasilnya adalah
@@ -51,7 +51,7 @@ Jika kamu ingin variabelmu bersifat konstan atau tidak bisa diubah, kamu bisa me
 ```
 ingat favorit pasti "teh"
 ingat favorit adalah "kopi"
-tampilkan favorit
+tulis favorit
 ```
 
 maka hasilnya adalah
@@ -59,5 +59,126 @@ maka hasilnya adalah
 ```
 Terdapat kesalahan pada baris ke-3: Variabel favorit adalah konstan sehingga isinya tidak bisa diubah.
 ```
+Informasi tambahan:
+- Nama variabel tidak boleh hanya berisi angka, tetapi kombinasi variabel dan angka diperbolehkan
+- Nama variabel tidak boleh mengandung simbol dan tanda baca, kecuali garis bawah(_)
 
-Bagian 3 segera hadir...
+## 3. Apa bedanya pakai petik dua dan tidak?
+Kalimat tanpa tanda petik dua digunakan untuk menampilkan isi variabel. Contoh:
+```
+ingat umur adalah 16
+tulis umur
+```
+maka kode di atas akan menampilkan isi dari umur
+```
+16
+```
+Sedangkan jika diberi tanda petik dua
+```
+ingat umur adalah 16
+tulis "umur"
+```
+maka kode di atas akan menampilkan tulisan "umur"
+```
+umur
+```
+## 4. Tipe data
+Di setiap bahasa pemrograman ada yang namanya tipe data. Dalam bahasa ini, hanya ada 2 tipe data:
+  ### 1. String (Kalimat)
+  String, atau kita dalam bahasa ini kita sebut saja sebagai kalimat, adalah tipe data yang berisi serangkaian huruf, angka, ataupun simbol. Contoh:
+  - "Halo"
+  - "12345"
+  - "Umur saya adalah 16 tahun"
+
+  Panjang string tidak menentu, panjangnya bisa dimulai dari 0, contoh:
+  - ""
+  - "a"
+
+  Keduanya termasuk string, yang terpenting diapit oleh tanda petik dua(")
+  
+  ### 2. Angka
+  Seperti namanya, tipe data angka pastinya berisi angka. Dalam bahasa ini, angka termasuk bilangan asli, negatif, maupun bilangan desimal. Contoh:
+  - 12345
+  - 0.3333
+  - -1.5
+  - 90
+
+  Di contoh atas, ada 12345, sedangkan di string juga ada "12345", tetapi apa perbedaan angka yang berjenis string dan yang bukan? Perbedaannya angka yang bertipe string tidak bisa dijumlahkan, seperti "10"+"10" itu tidak bisa dijumlahkan, sedangkan 10+10 akan menghasilkan 20. Contoh:
+  ```
+  tulis 10+10
+  ```
+  maka hasilnya:
+  ```
+  20
+  ```
+  tipe data angka bisa dioperasikan dengan operasi hitung lainnya yaitu pengurangan(-), perkalian(*), dan pembagian(/) 
+## 5. Percabangan
+Dilihat dari namanya, percabangan berarti membagi jalur kode kita menjadi beberapa cabang. Jika sebelumnya kita membuat kode dengan 1 jalur seperti ini:
+```
+ingat uang adalah 50000
+tulis uang
+```
+Sekarang bagaimana jika kita meningkatkan kode kita agar menjadi bercabang
+```
+ingat uang adalah 5000
+jika uang lebih-dari 0
+tulis "kamu punya uang"
+akhiri jika
+```
+maka akan menghasilkan
+```
+kamu punya uang
+```
+Perintah "jika" digunakan untuk membandingkan 2 data, dalam contoh di atas kita mengecek apakah variabel uang lebih dari 0, dan jika lebih dari 0, maka tampilkan "kamu punya uang". Mari kita coba apa yang terjadi jika kita mengubah isi variabel uang menjadi 0
+```
+ingat uang adalah 5000
+jika uang lebih-dari 0
+tulis "kamu punya uang"
+akhiri jika
+```
+Maka tidak akan tampil apa apa
+```
+
+```
+Sekarang kita tingkatkan lagi menjadi seperti ini
+```
+ingat uang adalah 5000
+jika uang lebih-dari 0
+tulis "kamu punya uang"
+akhiri jika
+jika uang lebih-dari 5000
+tulis "Kamu bisa membeli es teh manis"
+akhiri jika
+```
+maka hasilnya adalah
+```
+kamu punya uang 
+Kamu bisa membeli es teh manis
+```
+Jangan lupa untuk memberi perintah "akhiri jika" untuk mengakhiri kode yang dijalankan perintah "jika". Kemudian kamu bisa mengkreasikan kodemu menjadi bercabang cabang, bahkan kamu bisa menambahkan perintah jika di dalam perintah jika seperti ini
+```
+ingat uang adalah 5000
+ingat warung adalah "tutup"
+jika uang lebih-dari 0
+tulis "kamu punya uang"
+akhiri jika
+
+jika uang lebih-dari 5000
+  jika warung sama-dengan "buka"
+  tulis "Kamu bisa membeli es teh manis"
+  akhiri jika
+
+  jika warung sama-dengan "tutup"
+  tulis "Kamu punya cukup uang untuk beli es teh manis tapi warungnya tutup"
+akhiri jika
+```
+Maka hasilnya adalah
+```
+kamu punya uang
+Kamu punya cukup uang untuk beli es teh manis tapi warungnya tutup
+```
+Pernyataan yang digunakan untuk membandingkan ada 4:
+1. sama-dengan : untuk mengecek apakah data pertama dan kedua sama persis
+2. berbeda-dengan : untuk mengecek apakah data pertama dan kedua berbeda
+3. lebih-dari : untuk mengecek apakah data pertama lebih beear daripada data kedua (Hanya berlaku untuk angka)
+4. kurang-dari : untuk mengecek apakah data pertama lebih kecil daripada data kedua (Hanya berlaku untuk angka)
