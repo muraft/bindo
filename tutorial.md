@@ -170,6 +170,7 @@ jika uang lebih-dari 5000
 
   jika warung sama-dengan "tutup"
   tulis "Kamu punya cukup uang untuk beli es teh manis tapi warungnya tutup"
+  akhiri jika
 akhiri jika
 ```
 Maka hasilnya adalah
