@@ -1,6 +1,7 @@
 Bindo adalah [toy programming language](https://www.techopedia.com/definition/22609/toy-language) atau bahasa pemrograman yang hanya digunakan untuk main-main ataupun edukasi, bukan untuk membuat program tingkat tinggi. Bahasa ini dibuat menggunakan JavaScript, sehingga bahasa ini berfungsi sebagai library JavaScript
 
 # Perkenalan
+![logo Bindo](logo.jpg)
 Bindo adalah singkatan dari Bahasa Indonesia, sesuai namanya, Bindo menggunakan perintah yang mudah dibaca dan dipahami bagi orang yang belum terlalu familiar dengan bahasa pemrograman karena perintahnya menggunakan kosa kata Bahasa Indonesia
 
 ```

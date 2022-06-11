@@ -36,7 +36,7 @@ bindo.jalankan= kode=>{
 }
 
 
-// #####Private Functions#####
+// ##### Fungsi Sistem #####
 bindo.sistem = {};
 
 bindo.sistem.bongkar=baris=>{
@@ -56,7 +56,8 @@ bindo.sistem.bongkar=baris=>{
       })
     }
   })
-  hasil=hasil.filter(b=>b.isi.toString().trim()!="")
+  hasil=hasil.filter(b=>b.isi.toString().trim()!="");
+  
   return {
     perintah: hasil[0].isi.toLowerCase().trim(),
     parameter: hasil.slice(1)
