@@ -131,7 +131,7 @@ kamu punya uang
 ```
 Perintah "jika" digunakan untuk membandingkan 2 data, dalam contoh di atas kita mengecek apakah variabel uang lebih dari 0, dan jika lebih dari 0, maka tampilkan "kamu punya uang". Mari kita coba apa yang terjadi jika kita mengubah isi variabel uang menjadi 0
 ```
-ingat uang adalah 5000
+ingat uang adalah 0
 jika uang lebih-dari 0
 tulis "kamu punya uang"
 akhiri jika
