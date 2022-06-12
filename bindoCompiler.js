@@ -1,4 +1,4 @@
-const bindo={konsol:true,output:null,sistem:{}};
+const bindo={konsol:true,output:null};
 
 bindo.init=()=>{
   if(!bindo.konsol && !(bindo.output instanceof Element))throw Error("bindo.output harus berisi elemen HTML");
@@ -50,17 +50,25 @@ bindo.sistem.bongkar=baris=>{
       })
     }
     else{
-      hasil.push({
-        isi:v,
-        tipe: "string"
-      })
+      hasil.push({isi:v,tipe:"string"})
     }
   })
   hasil=hasil.filter(b=>b.isi.toString().trim()!="");
+  let hasilFinal=[];
+  for(let i=0;i<hasil.length;i++){
+    if(hasil[i].isi.startsWith('+') && hasil[i].tipe=='keyword'){
+      hasilFinal[hasilFinal.length-1]={isi:hasilFinal[hasilFinal.length-1].isi+hasil[i].isi,tipe:'string'};
+    }
+    else if(hasilFinal[hasilFinal.length-1] && hasil[i-1] && hasil[i-1].isi.endsWith('+')){
+      hasilFinal[hasilFinal.length-1]={isi:hasilFinal[hasilFinal.length-1].isi+hasil[i].isi,tipe:'string'};
+      continue;
+    }
+    else{hasilFinal.push(hasil[i])}
+  }
   
   return {
-    perintah: hasil[0].isi.toLowerCase().trim(),
-    parameter: hasil.slice(1)
+    perintah: hasilFinal[0].isi.toLowerCase().trim(),
+    parameter: hasilFinal.slice(1)
   }
 }
 
