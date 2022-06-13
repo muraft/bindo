@@ -54,13 +54,31 @@ bindo.sistem.bongkar=baris=>{
     }
   })
   hasil=hasil.filter(b=>b.isi.toString().trim()!="");
-  let hasilFinal=[];
+  let konten,hasilFinal=[]
   for(let i=0;i<hasil.length;i++){
     if(hasil[i].isi.startsWith('+') && hasil[i].tipe=='keyword'){
-      hasilFinal[hasilFinal.length-1]={isi:hasilFinal[hasilFinal.length-1].isi+hasil[i].isi,tipe:'string'};
+      hasil[i].isi.split('+').forEach(a=>{
+        if(a.trim()!='')
+        {
+          if(hasil[i].tipe=='keyword'){
+          konten = bindo.sistem.dapatkan({isi:a,tipe:hasil[i].tipe});
+          konten = {isi:hasil[i].isi.replace('+'+a,konten.isi),tipe:'string'};
+          }else{konten=a}
+        }
+      },'');
+      hasilFinal[hasilFinal.length-1]={isi:hasilFinal[hasilFinal.length-1].isi+konten.isi,tipe:'string'};
     }
     else if(hasilFinal[hasilFinal.length-1] && hasil[i-1] && hasil[i-1].isi.endsWith('+')){
-      hasilFinal[hasilFinal.length-1]={isi:hasilFinal[hasilFinal.length-1].isi+hasil[i].isi,tipe:'string'};
+      hasil[i-1].isi.split('+').forEach(a=>{
+        if(a.trim()!='')
+        {
+          if(hasil[i-1].tipe=='keyword'){
+          konten = bindo.sistem.dapatkan({isi:a,tipe:hasil[i-1].tipe});
+          konten = {isi:hasil[i-1].isi.replace(a+'+',konten.isi),tipe:'string'};
+          }else{konten=a}
+        }
+      },'');
+      hasilFinal[hasilFinal.length-1]={isi:konten.isi+hasil[i].isi,tipe:'string'};
       continue;
     }
     else{hasilFinal.push(hasil[i])}
@@ -87,10 +105,9 @@ bindo.sistem.tampilkan=kalimat=>{
 
 bindo.sistem.dapatkan=konten=>{
   if(konten.tipe=="keyword"){
-    if(!bindo.variabel.has(konten.isi))bindo.sistem.error('Tidak ada variabel yang bernama "'+konten.isi+'"');;
+    if(!bindo.variabel.has(konten.isi))bindo.sistem.error('Tidak ada variabel yang bernama "'+konten.isi+'"');
     return bindo.variabel.get(konten.isi);
-  }
-  return konten
+  }else{return konten}
 }
 
 // ####Sintaks####
