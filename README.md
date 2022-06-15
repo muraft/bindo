@@ -17,7 +17,7 @@ Assalamualaikum
 
 Untuk saat ini Bindo masih berada di versi awal sehingga hanya memiliki sedikit fitur, fitur lainnya akan dikembangkan di versi mendatang
 
-Untuk mencoba Bindo secara online, kamu bisa kunjungi https://muraft.great-site.net/demo/bindo
+Untuk mencoba Bindo secara online, kamu bisa kunjungi https://muraft.github.io/bindo
 
 ## Pelajari lebih lanjut
 - Untuk mempelajari dasar-dasar bahasa ini, kunjungi [tutorial.md](tutorial.md)

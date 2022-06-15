@@ -39,12 +39,14 @@ bindo.jalankan= kode=>{
 // ##### Fungsi Sistem #####
 bindo.sistem = {};
 
+bindo.sistem.nonAngka=/[a-zA-Z!@#$%^&_=\[\]{};':"\\|,.<>?$]/;
+
 bindo.sistem.bongkar=baris=>{
   let hasil = [];
   baris.split('"').forEach((v,i)=>{
     if(i%2==0){
       v.trim().split(" ").forEach(w=>{
-        let tipe = (/[a-zA-Z!@#$%^&()_=\[\]{};':"\\|,.<>?$]/).test(w)==false && w.length>0 && (/\d/).test(w)==true?"angka":"keyword";
+        let tipe = bindo.sistem.nonAngka.test(w)==false && w.length>0 && (/\d/).test(w)==true?"angka":"keyword";
         let isi = tipe=="angka"?parseFloat(eval(w)):w;
         hasil.push({isi,tipe});
       })
@@ -54,36 +56,53 @@ bindo.sistem.bongkar=baris=>{
     }
   })
   hasil=hasil.filter(b=>b.isi.toString().trim()!="");
-  let konten,hasilFinal=[]
-  for(let i=0;i<hasil.length;i++){
-    if(hasil[i].isi.startsWith('+') && hasil[i].tipe=='keyword'){
-      hasil[i].isi.split('+').forEach(a=>{
-        if(a.trim()!='')
-        {
-          if(hasil[i].tipe=='keyword'){
-          konten = bindo.sistem.dapatkan({isi:a,tipe:hasil[i].tipe});
-          konten = {isi:hasil[i].isi.replace('+'+a,konten.isi),tipe:'string'};
-          }else{konten=a}
+  let hasilFinal=[];
+  let gabung = false;
+  hasil.forEach((v,i)=>{
+    if(hasil[i].tipe=='keyword'){
+    if(hasil[i].isi.startsWith('+') && hasil[i].isi.endsWith('+')){
+      if(hasilFinal[hasilFinal.length-1]==undefined)hasilFinal[hasilFinal.length-1]=[];
+      hasil[i].isi.split('+').forEach(w=>{
+        if(w.trim()!=''){
+          hasilFinal[hasilFinal.length-1].push({isi:w,tipe:hasil[i].tipe});
         }
-      },'');
-      hasilFinal[hasilFinal.length-1]={isi:hasilFinal[hasilFinal.length-1].isi+konten.isi,tipe:'string'};
+      })
+      gabung=true;
     }
-    else if(hasilFinal[hasilFinal.length-1] && hasil[i-1] && hasil[i-1].isi.endsWith('+')){
-      hasil[i-1].isi.split('+').forEach(a=>{
-        if(a.trim()!='')
-        {
-          if(hasil[i-1].tipe=='keyword'){
-          konten = bindo.sistem.dapatkan({isi:a,tipe:hasil[i-1].tipe});
-          konten = {isi:hasil[i-1].isi.replace(a+'+',konten.isi),tipe:'string'};
-          }else{konten=a}
+    else if(hasil[i].isi.startsWith('+')){
+      if(hasilFinal[hasilFinal.length-1]==undefined)hasilFinal[hasilFinal.length-1]=[];
+      hasil[i].isi.split('+').forEach(w=>{
+        if(w.trim()!=''){
+          hasilFinal[hasilFinal.length-1].push({isi:w,tipe:hasil[i].tipe})
         }
-      },'');
-      hasilFinal[hasilFinal.length-1]={isi:konten.isi+hasil[i].isi,tipe:'string'};
-      continue;
+      })
     }
-    else{hasilFinal.push(hasil[i])}
-  }
-  
+    else if(hasil[i].isi.endsWith('+')){
+      hasilFinal[hasilFinal.length]=[];
+      hasil[i].isi.split('+').forEach(w=>{
+        if(w.trim()!=''){
+          hasilFinal[hasilFinal.length-1].push({isi:w,tipe:hasil[i].tipe});
+        }
+      })
+      gabung=true;
+    }
+    else{
+      hasilFinal[hasilFinal.length]=[];
+      hasil[i].isi.split('+').forEach(w=>{
+        hasilFinal[hasilFinal.length-1].push({isi:w,tipe:hasil[i].tipe})
+      })
+    }
+    }
+    else{
+      if(!gabung)hasilFinal[hasilFinal.length]=[hasil[i]];
+      else{
+        hasilFinal[hasilFinal.length-1]=hasilFinal[hasilFinal.length-1].concat(hasil[i])
+        gabung=false;
+      }
+    }
+  })
+  hasilFinal=hasilFinal.map(w=>w.length>1?w:w[0]);
+  console.log(hasilFinal)
   return {
     perintah: hasilFinal[0].isi.toLowerCase().trim(),
     parameter: hasilFinal.slice(1)
@@ -104,10 +123,14 @@ bindo.sistem.tampilkan=kalimat=>{
 }
 
 bindo.sistem.dapatkan=konten=>{
-  if(konten.tipe=="keyword"){
-    if(!bindo.variabel.has(konten.isi))bindo.sistem.error('Tidak ada variabel yang bernama "'+konten.isi+'"');
-    return bindo.variabel.get(konten.isi);
-  }else{return konten}
+  if(!Array.isArray(konten))konten=[konten];
+  return {isi:konten.reduce((a,b,i)=>{
+    if(!bindo.sistem.nonAngka.test(b.isi))b.tipe='angka';
+    if(b.tipe=='keyword'){
+      if(!bindo.variabel.has(b.isi))bindo.sistem.error('Tidak ada variabel yang bernama "'+b.isi+'"');
+      return a+bindo.variabel.get(b.isi).isi;
+    }else{return a+b.isi}
+  },''),tipe:'string'}
 }
 
 // ####Sintaks####
