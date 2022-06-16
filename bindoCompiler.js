@@ -14,6 +14,7 @@ bindo.init=()=>{
 }
 
 bindo.jalankan= kode=>{
+  let waktuMulai = performance.now()
   bindo.init();
 
   let baris = kode.split('\n')
@@ -31,8 +32,9 @@ bindo.jalankan= kode=>{
     else{bindo.sistem.error('Perintah "'+ini.perintah+'" tidak tersedia dalam bahasa pemrograman ini.')}
     bindo.proses.dataBaris.push(ini);
   }
-  if(!bindo.konsol)bindo.output.innerHTML=bindo.proses.stringOutput;
-  bindo.sistem.tampilkan("Proses menjalankan berhasil")
+  let sukses='Proses menjalankan berhasil('+(performance.now()-waktuMulai)+' ms)';
+  if(!bindo.konsol)bindo.output.innerHTML=bindo.proses.stringOutput+'<span class="bindo-success">'+sukses+'</span>';
+  else{bindo.sistem.tampilkan(sukses)}
 }
 
 
