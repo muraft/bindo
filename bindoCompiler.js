@@ -60,26 +60,26 @@ bindo.sistem.bongkar=baris=>{
   let gabung = false;
   hasil.forEach((v,i)=>{
     if(hasil[i].tipe=='keyword'){
-    if(hasil[i].isi.startsWith('+') && hasil[i].isi.endsWith('+')){
+    if(hasil[i].isi.startsWith('.') && hasil[i].isi.endsWith('.')){
       if(hasilFinal[hasilFinal.length-1]==undefined)hasilFinal[hasilFinal.length-1]=[];
-      hasil[i].isi.split('+').forEach(w=>{
+      hasil[i].isi.split('.').forEach(w=>{
         if(w.trim()!=''){
           hasilFinal[hasilFinal.length-1].push({isi:w,tipe:hasil[i].tipe});
         }
       })
       gabung=true;
     }
-    else if(hasil[i].isi.startsWith('+')){
+    else if(hasil[i].isi.startsWith('.')){
       if(hasilFinal[hasilFinal.length-1]==undefined)hasilFinal[hasilFinal.length-1]=[];
-      hasil[i].isi.split('+').forEach(w=>{
+      hasil[i].isi.split('.').forEach(w=>{
         if(w.trim()!=''){
           hasilFinal[hasilFinal.length-1].push({isi:w,tipe:hasil[i].tipe})
         }
       })
     }
-    else if(hasil[i].isi.endsWith('+')){
+    else if(hasil[i].isi.endsWith('.')){
       hasilFinal[hasilFinal.length]=[];
-      hasil[i].isi.split('+').forEach(w=>{
+      hasil[i].isi.split('.').forEach(w=>{
         if(w.trim()!=''){
           hasilFinal[hasilFinal.length-1].push({isi:w,tipe:hasil[i].tipe});
         }
@@ -88,7 +88,7 @@ bindo.sistem.bongkar=baris=>{
     }
     else{
       hasilFinal[hasilFinal.length]=[];
-      hasil[i].isi.split('+').forEach(w=>{
+      hasil[i].isi.split('.').forEach(w=>{
         hasilFinal[hasilFinal.length-1].push({isi:w,tipe:hasil[i].tipe})
       })
     }
@@ -102,7 +102,7 @@ bindo.sistem.bongkar=baris=>{
     }
   })
   hasilFinal=hasilFinal.map(w=>w.length>1?w:w[0]);
-  console.log(hasilFinal)
+  
   return {
     perintah: hasilFinal[0].isi.toLowerCase().trim(),
     parameter: hasilFinal.slice(1)
@@ -111,7 +111,7 @@ bindo.sistem.bongkar=baris=>{
 
 bindo.sistem.error=pesan=>{
   let info='Terdapat kesalahan pada baris ke-'+(bindo.proses.indexBaris+1)+': ';
-  if(!bindo.konsol)bindo.output.innerHTML=bindo.proses.stringOutput+'<font color="red">'+info+pesan+'</font><br>';
+  if(!bindo.konsol)bindo.output.innerHTML=bindo.proses.stringOutput+'<span class="bindo-error">'+info+pesan+'</span><br>';
   throw Error(info+pesan);
 }
 
