@@ -32,7 +32,7 @@ bindo.jalankan= kode=>{
     else{bindo.sistem.error('Perintah "'+ini.perintah+'" tidak tersedia dalam bahasa pemrograman ini.')}
     bindo.proses.dataBaris.push(ini);
   }
-  let sukses='Proses menjalankan berhasil('+(performance.now()-waktuMulai)+' ms)';
+  let sukses='Proses menjalankan berhasil ('+(performance.now()-waktuMulai)+' ms)';
   if(!bindo.konsol)bindo.output.innerHTML=bindo.proses.stringOutput+'<span class="bindo-success">'+sukses+'</span>';
   else{bindo.sistem.tampilkan(sukses)}
 }
@@ -41,15 +41,29 @@ bindo.jalankan= kode=>{
 // ##### Fungsi Sistem #####
 bindo.sistem = {};
 
-bindo.sistem.nonAngka=/[a-zA-Z!@#$%^&_=\[\]{};':"\\|,.<>?$]/;
-
 bindo.sistem.bongkar=baris=>{
   let hasil = [];
   baris.split('"').forEach((v,i)=>{
     if(i%2==0){
       v.trim().split(" ").forEach(w=>{
-        let tipe = bindo.sistem.nonAngka.test(w)==false && w.length>0 && (/\d/).test(w)==true?"angka":"keyword";
-        let isi = tipe=="angka"?parseFloat(eval(w)):w;
+        let isi,tipe;
+        let operator=/[\d\+\-\*\/()]/;
+        if(operator.test(w) && !/[!@#$%^&_=\[\]{};':"\\|,.<>?$]/.test(w)){
+          w.split(operator).forEach(x=>{
+            if(x.trim().length && !parseFloat(x)){
+              w=w.replace(RegExp(x),bindo.sistem.dapatkan({isi:x,tipe:'keyword'}).isi)
+            }
+          })
+          console.log(w)
+          try {
+            isi=eval(w);
+          } catch (e) {bindo.sistem.error("Operasi hitung gagal dilakukan, cobalah teliti lagi penempatan lambang operasi hitung")}
+          tipe='angka';
+        }
+        else{
+          isi=w;
+          tipe='keyword';
+        }
         hasil.push({isi,tipe});
       })
     }
@@ -65,7 +79,7 @@ bindo.sistem.bongkar=baris=>{
     if(hasil[i].isi.startsWith('.') && hasil[i].isi.endsWith('.')){
       if(hasilFinal[hasilFinal.length-1]==undefined)hasilFinal[hasilFinal.length-1]=[];
       hasil[i].isi.split('.').forEach(w=>{
-        if(w.trim()!=''){
+        if(w.trim().length){
           hasilFinal[hasilFinal.length-1].push({isi:w,tipe:hasil[i].tipe});
         }
       })
@@ -74,7 +88,7 @@ bindo.sistem.bongkar=baris=>{
     else if(hasil[i].isi.startsWith('.')){
       if(hasilFinal[hasilFinal.length-1]==undefined)hasilFinal[hasilFinal.length-1]=[];
       hasil[i].isi.split('.').forEach(w=>{
-        if(w.trim()!=''){
+        if(w.trim().length){
           hasilFinal[hasilFinal.length-1].push({isi:w,tipe:hasil[i].tipe})
         }
       })
@@ -82,7 +96,7 @@ bindo.sistem.bongkar=baris=>{
     else if(hasil[i].isi.endsWith('.')){
       hasilFinal[hasilFinal.length]=[];
       hasil[i].isi.split('.').forEach(w=>{
-        if(w.trim()!=''){
+        if(w.trim().length){
           hasilFinal[hasilFinal.length-1].push({isi:w,tipe:hasil[i].tipe});
         }
       })
@@ -104,7 +118,7 @@ bindo.sistem.bongkar=baris=>{
     }
   })
   hasilFinal=hasilFinal.map(w=>w.length>1?w:w[0]);
-  
+  console.log(hasilFinal)
   return {
     perintah: hasilFinal[0].isi.toLowerCase().trim(),
     parameter: hasilFinal.slice(1)
@@ -125,14 +139,17 @@ bindo.sistem.tampilkan=kalimat=>{
 }
 
 bindo.sistem.dapatkan=konten=>{
+  console.log(konten.tipe)
   if(!Array.isArray(konten))konten=[konten];
+  let ketemuString=false;
   return {isi:konten.reduce((a,b,i)=>{
-    if(!bindo.sistem.nonAngka.test(b.isi))b.tipe='angka';
     if(b.tipe=='keyword'){
       if(!bindo.variabel.has(b.isi))bindo.sistem.error('Tidak ada variabel yang bernama "'+b.isi+'"');
-      return a+bindo.variabel.get(b.isi).isi;
+      let c = bindo.variabel.get(b.isi);
+      if(c.tipe=='string')ketemuString=true;
+      return a+c.isi;
     }else{return a+b.isi}
-  },''),tipe:'string'}
+  },''),tipe:ketemuString?'string':konten[0].tipe}
 }
 
 // ####Sintaks####
