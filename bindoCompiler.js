@@ -10,7 +10,8 @@ bindo.init=()=>{
     stringOutput:"",
     kedalamanJika:0,
     hasilJika:[null],
-    dalamFungsi:null
+    dataBaris:[],
+    dalamFungsi:false
   }
 }
 
@@ -32,6 +33,8 @@ bindo.jalankan= kode=>{
     else if(ini.perintah=="akhiri")bindo.sintaks.akhiri(ini.parameter);
     else if(ini.perintah=="fungsi")bindo.sintaks.fungsi(ini.parameter);
     else{bindo.sistem.error('Perintah "'+ini.perintah+'" tidak tersedia dalam bahasa pemrograman ini.')}
+    
+    if(dalamFungsi)bindo.proses.dataBaris.push(ini)
   }
   let sukses='Proses menjalankan berhasil ('+(performance.now()-waktuMulai)+' ms)';
   if(!bindo.konsol)bindo.output.innerHTML=bindo.proses.stringOutput+'<span class="bindo-success">'+sukses+'</span>';
@@ -99,7 +102,7 @@ bindo.sistem.bongkar=baris=>{
     }
   })
   hasilFinal=hasilFinal.map(w=>w.length>1?w:w[0]);
-  console.log(hasilFinal)
+  
   return {
     perintah: hasilFinal[0].isi.toLowerCase().trim(),
     parameter: hasilFinal.slice(1)
@@ -144,6 +147,13 @@ bindo.sistem.dapatkan=konten=>{
   },''),tipe:ketemuString?'string':'angka'}
 }
 
+bindo.sistem.validasiNama=namaVariabel=>{
+  if(namaVariabel.tipe=="string")bindo.sistem.error("Nama variabel, fungsi, ataupun parameter tidak boleh string");
+  if(namaVariabel.tipe=="angka")bindo.sistem.error("Nama variabel, fungsi, ataupun parameter tidak boleh angka");
+  if(/[!@#$%^&*()+\-=\[\]{};':"\\|,.<>\/?]/.test(namaVariabel.isi))bindo.sistem.error("Nama variabel, fungsi, ataupun parameter tidak boleh mengandung simbol");
+  return namaVariabel.isi;
+}
+
 // ####Sintaks####
 bindo.sintaks={}
 
@@ -152,11 +162,7 @@ bindo.sintaks.ingat=parameter=>{
     bindo.sistem.error("Perintah ini membutuhkan 3 parameter.")
   }
 
-  if(parameter[0].tipe=="string")bindo.sistem.error("Nama variabel tidak boleh string")
-  if(parameter[0].tipe=="angka")bindo.sistem.error("Nama variabel tidak boleh angka")
-  let namaVariabel = parameter[0].isi;
-  if(/[!@#$%^&*()+\-=\[\]{};':"\\|,.<>\/?]/.test(namaVariabel))bindo.sistem.error("Nama variabel tidak boleh mengandung simbol");
-
+  let namaVariabel = bindo.sistem.validasiNama(parameter[0]);
   let konjungsi = parameter[1].isi.toLowerCase();
   let konstan;
   if(konjungsi=="adalah")konstan=false;
@@ -231,10 +237,11 @@ bindo.sintaks.fungsi=parameter=>{
   if(parameter.length<2){
     bindo.sistem.error("Perintah ini minimal membutuhkan 2 parameter.")
   }
-  if(parameter[0].tipe=="string")bindo.sistem.error("Nama fungsi tidak boleh string")
-  if(parameter[0].tipe=="angka")bindo.sistem.error("Nama fungsi tidak boleh angka")
-  let namaFungsi = parameter[0].isi;
-  if(/[!@#$%^&*()+\-=\[\]{};':"\\|,.<>\/?]/.test(namaFungsi))bindo.sistem.error("Nama variabel tidak boleh mengandung simbol");
+  let namaFungsi = bindo.sistem.validasiNama(parameter[0]);
   if(parameter[1].isi.toLowerCase()!='perlu')bindo.sistem.error('Parameter kedua fungsi harus bertuliskan "butuh"')
-  let argumen=parameter.slice(2);
+  let argumen = new Map();
+  parameter.slice(2).forEach(v=>{
+      argumen.set(bindo.sistem.validasiNama(v),null);
+    })
+  dalamFungsi = true;
 }
