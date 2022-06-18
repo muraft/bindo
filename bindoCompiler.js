@@ -6,36 +6,36 @@ bindo.init=()=>{
   bindo.variabel = new Map();
   bindo.fungsi = new Map();
   bindo.proses = {
-    indexBaris:0,
+    indexBaris:-1,
     stringOutput:"",
     kedalamanJika:0,
     hasilJika:[null],
-    dataBaris:[],
-    dalamFungsi:null
+    dalamFungsi:null,
+    fungsiBerjalan:null,
+    checkpoint:null
   }
 }
 
-bindo.jalankan= kode=>{
+bindo.jalankan=kode=>{
   let waktuMulai = performance.now()
   bindo.init();
 
   let baris = kode.split('\n')
-  for(bindo.proses.indexBaris;bindo.proses.indexBaris<baris.length;bindo.proses.indexBaris++)
+  while(bindo.proses.indexBaris<baris.length-1)
   {
+    bindo.proses.indexBaris++;
     let isiBaris=baris[bindo.proses.indexBaris];
     if(isiBaris.trim()=='' || isiBaris.startsWith("//"))continue;
     let ini = bindo.sistem.bongkar(isiBaris);
     if(bindo.proses.hasilJika[bindo.proses.kedalamanJika]===false && ini.perintah!="akhiri")continue;
-    if(bindo.proses.dalamFungsi && ini.perintah!="akhiri"){
-      bindo.proses.dataBaris.push(ini);
-      continue;
-    }
+    if(bindo.proses.dalamFungsi && ini.perintah!="akhiri")continue;
     
     if(ini.perintah=="ingat")bindo.sintaks.ingat(ini.parameter);
     else if(ini.perintah=="tulis" || ini.perintah=="tampilkan")bindo.sintaks.tulis(ini.parameter);
     else if(ini.perintah=="jika" || ini.perintah=="kalau")bindo.sintaks.jika(ini.parameter);
     else if(ini.perintah=="akhiri")bindo.sintaks.akhiri(ini.parameter);
     else if(ini.perintah=="fungsi")bindo.sintaks.fungsi(ini.parameter);
+    else if(ini.perintah=="jalankan")bindo.sintaks.jalankan(ini.parameter);
     else{bindo.sistem.error('Perintah "'+ini.perintah+'" tidak tersedia dalam bahasa pemrograman ini.')}
   }
   let sukses='Proses menjalankan berhasil ('+(performance.now()-waktuMulai)+' ms)';
@@ -104,6 +104,7 @@ bindo.sistem.bongkar=baris=>{
     }
   })
   hasilFinal=hasilFinal.map(w=>w.length>1?w:w[0]);
+  if(Array.isArray(hasilFinal[0]))bindo.sistem.error('Perintah tidak boleh menggunakan string concat');
   
   return {
     perintah: hasilFinal[0].isi.toLowerCase().trim(),
@@ -196,7 +197,6 @@ bindo.sintaks.jika=parameter=>{
   }
   let variabel1=bindo.sistem.dapatkan(parameter[0]);
   let variabel2=bindo.sistem.dapatkan(parameter[2]);
-  console.log(variabel1,variabel2)
   
   let pernyataan=parameter[1].isi.toLowerCase();
   let hasil;
@@ -219,7 +219,7 @@ bindo.sintaks.jika=parameter=>{
     else{hasil=false}
   }
   else{bindo.sistem.error('Pernyataan "'+pernyataan+'" bukanlah pernyataan yang tepat untuk membandingkan dua variabel')}
-  console.log(hasil)
+  
   bindo.proses.kedalamanJika++;
   bindo.proses.hasilJika[bindo.proses.kedalamanJika]=hasil;
 }
@@ -233,27 +233,50 @@ bindo.sintaks.akhiri=parameter=>{
     bindo.proses.kedalamanJika--;
   }
   else if(parameter[0].isi.toLowerCase()=="fungsi"){
-    if(!bindo.proses.dalamFungsi)bindo.sistem.error('Tidak bisa mengakhiri perintah "fungsi" karena tidak ada fungsi yang sedang dideklarasi');
-    bindo.fungsi.set(bindo.proses.dalamFungsi.namaFungsi,{
+    if(bindo.proses.fungsiBerjalan){
+      bindo.proses.indexBaris=bindo.proses.checkpoint;
+      bindo.proses.fungsiBerjalan=null;
+    }
+    else{
+      if(!bindo.proses.dalamFungsi)bindo.sistem.error('Tidak bisa mengakhiri perintah "fungsi" karena tidak ada fungsi yang sedang dideklarasi');
+      bindo.fungsi.set(bindo.proses.dalamFungsi.namaFungsi,{
       argumen:bindo.proses.dalamFungsi.argumen,
-      isi:bindo.proses.dataBaris
-    });
-    bindo.proses.dataBaris=[];
-    bindo.proses.dalamFungsi=null;
+      indexAwal:bindo.proses.dalamFungsi.indexAwal
+      });
+      bindo.proses.dalamFungsi=null;
+    }
   }
   else{bindo.sistem.error('"'+parameter[0].isi+'" bukanlah sesuatu yang bisa diakhiri')}
 }
 
 bindo.sintaks.fungsi=parameter=>{
-  if(parameter.length<2){
+  if(parameter.length<1){
     bindo.sistem.error("Perintah ini minimal membutuhkan 2 parameter.")
   }
   if(bindo.proses.dalamFungsi)bindo.sistem.error("Tidak bisa mendeklarasikan fungsi karena masih ada pendeklarasian fungsi yang belum diakhiri")
   let namaFungsi = bindo.sistem.validasiNama(parameter[0]);
-  if(parameter[1].isi.toLowerCase()!='perlu')bindo.sistem.error('Parameter kedua fungsi harus bertuliskan "butuh"')
+  
   let argumen = new Map();
-  parameter.slice(2).forEach(v=>{
+  if(parameter.length>1){
+    if(parameter[1].isi.toLowerCase()!='perlu')bindo.sistem.error('Parameter kedua fungsi harus bertuliskan "perlu"')
+    parameter.slice(2).forEach(v=>{
       argumen.set(bindo.sistem.validasiNama(v),null);
+    });
+  }
+  bindo.proses.dalamFungsi = {namaFungsi,argumen,indexAwal:bindo.proses.indexBaris};
+}
+
+bindo.sintaks.jalankan=parameter=>{
+  if(parameter.length<1){
+    bindo.sistem.error("Perintah ini minimal membutuhkan 1 parameter.")
+  }
+  if(bindo.proses.fungsiBerjalan)bindo.sistem.error('Tidak bisa menjalankan fungsi di dalam fungsi');
+  if(!bindo.fungsi.has(parameter[0].isi))bindo.sistem.error('Tidak ada fungsi yang bernama "'+parameter[0].isi+'"')
+  let fungsi = bindo.fungsi.get(parameter[0].isi);
+  parameter.slice(1).forEach((v,i)=>{
+      fungsi.argumen.set(Array.from(fungsi.argumen.keys())[i],v)
   });
-  bindo.proses.dalamFungsi = {namaFungsi,argumen};
+  bindo.proses.fungsiBerjalan=fungsi;
+  bindo.proses.checkpoint=bindo.proses.indexBaris;
+  bindo.proses.indexBaris=fungsi.indexAwal;
 }
