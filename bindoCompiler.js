@@ -142,11 +142,19 @@ bindo.sistem.dapatkan=konten=>{
       return a+isi;
     }
     else if(b.tipe=='keyword'){
+      if(bindo.proses.fungsiBerjalan){
+        if(bindo.proses.fungsiBerjalan.argumen.has(konten[0].isi)){
+          let c=bindo.proses.fungsiBerjalan.argumen.get(konten[0].isi);
+          if(c===null)bindo.sistem.error('Parameter "'+konten[0].isi+'" belum terisi')
+          if(c.tipe=='string')ketemuString=true;
+          return a+c.isi;
+        }
+      }
       if(!bindo.variabel.has(b.isi))bindo.sistem.error('Tidak ada variabel yang bernama "'+b.isi+'"');
-      let c = bindo.variabel.get(b.isi);
+      let c=bindo.variabel.get(b.isi);
       if(c.tipe=='string')ketemuString=true;
       return a+c.isi;
-    }else{return a+b.isi}
+      }else{return a+b.isi}
   },''),tipe:ketemuString?'string':'angka'}
 }
 
@@ -273,9 +281,12 @@ bindo.sintaks.jalankan=parameter=>{
   if(bindo.proses.fungsiBerjalan)bindo.sistem.error('Tidak bisa menjalankan fungsi di dalam fungsi');
   if(!bindo.fungsi.has(parameter[0].isi))bindo.sistem.error('Tidak ada fungsi yang bernama "'+parameter[0].isi+'"')
   let fungsi = bindo.fungsi.get(parameter[0].isi);
-  parameter.slice(1).forEach((v,i)=>{
-      fungsi.argumen.set(Array.from(fungsi.argumen.keys())[i],v)
-  });
+  if(parameter.length>1){
+    if(parameter[1].isi!='dengan')bindo.sistem.error('Paramater kedua harus bertuliskan "dengan"')
+    parameter.slice(2).forEach((v,i)=>{
+      fungsi.argumen.set(Array.from(fungsi.argumen.keys())[i],bindo.sistem.dapatkan(v))
+    });
+  }
   bindo.proses.fungsiBerjalan=fungsi;
   bindo.proses.checkpoint=bindo.proses.indexBaris;
   bindo.proses.indexBaris=fungsi.indexAwal;
