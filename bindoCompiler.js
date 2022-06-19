@@ -39,7 +39,7 @@ bindo.jalankan=kode=>{
     else{bindo.sistem.error('Perintah "'+ini.perintah+'" tidak tersedia dalam bahasa pemrograman ini.')}
   }
   let sukses='Proses menjalankan berhasil ('+(performance.now()-waktuMulai)+' ms)';
-  if(!bindo.konsol)bindo.output.innerHTML=bindo.proses.stringOutput+'<span class="bindo-success">'+sukses+'</span>';
+  if(!bindo.konsol)bindo.output.innerHTML=bindo.proses.stringOutput+'<span class="bindo-succes">'+sukses+'</span>';
   else{bindo.sistem.tampilkan(sukses)}
 }
 
@@ -51,7 +51,12 @@ bindo.sistem.bongkar=baris=>{
   let hasil = [];
   baris.split('"').forEach((v,i)=>{
     if(i%2==0){
-      v.trim().split(" ").forEach(w=>{hasil.push({isi:w,tipe:(/[\d\+\-\*\/()]/.test(w) && !/[!@#$%^&_=\[\]{};':"\\|,.<>?$]/.test(w))?'angka':'keyword'});})
+      v.trim().split(" ").forEach(w=>{
+        if(/[\+\-\*\/()]/.test(w) && w.length==1)bindo.sistem.error("Operasi hitung gagal dilakukan, cobalah cek tipe data milik data yang sedang dioperasikan");
+        hasil.push({
+        isi:w,
+        tipe:(/[\d\+\-\*\/()]/.test(w) && !/[!@#$%^&_=\[\]{};':"\\|,.<>?$]/.test(w))?'angka':'keyword'
+      })})
     }
     else{
       hasil.push({isi:v,tipe:"string"})
@@ -129,11 +134,14 @@ bindo.sistem.dapatkan=konten=>{
   if(!Array.isArray(konten))konten=[konten];
   let ketemuString=false;
   return {isi:konten.reduce((a,b,i)=>{
+    if(/[\d\+\-\*\/()]/.test(b.isi) && !/[!@#$%^&_=\[\]{};':"\\|,.<>?$]/.test(b.isi))b.tipe='angka';
     if(b.tipe=='angka'){
       let isi;
       b.isi.split(/[\+\-\*\/()]/).forEach(v=>{
           if(v.trim().length && !parseFloat(v)){
-            b.isi=b.isi.replace(RegExp(v),bindo.sistem.dapatkan({isi:v,tipe:'keyword'}).isi)
+            let konten = bindo.sistem.dapatkan({isi:v,tipe:'keyword'});
+            if(konten.tipe!='angka')bindo.sistem.error('Tidak bisa melakukan operasi hitung karena variabel "'+v+'" bukan berisi angka');
+            b.isi=b.isi.replace(RegExp(v),konten.isi);
           }
         })
       try {
@@ -143,9 +151,9 @@ bindo.sistem.dapatkan=konten=>{
     }
     else if(b.tipe=='keyword'){
       if(bindo.proses.fungsiBerjalan){
-        if(bindo.proses.fungsiBerjalan.argumen.has(konten[0].isi)){
-          let c=bindo.proses.fungsiBerjalan.argumen.get(konten[0].isi);
-          if(c===null)bindo.sistem.error('Parameter "'+konten[0].isi+'" belum terisi')
+        if(bindo.proses.fungsiBerjalan.argumen.has(konten[i].isi)){
+          let c=bindo.proses.fungsiBerjalan.argumen.get(konten[i].isi);
+          if(c===null)bindo.sistem.error('Parameter "'+konten[i].isi+'" belum terisi')
           if(c.tipe=='string')ketemuString=true;
           return a+c.isi;
         }
@@ -154,14 +162,17 @@ bindo.sistem.dapatkan=konten=>{
       let c=bindo.variabel.get(b.isi);
       if(c.tipe=='string')ketemuString=true;
       return a+c.isi;
-      }else{return a+b.isi}
+      }else{
+        ketemuString=true;
+        return a+b.isi;
+      }
   },''),tipe:ketemuString?'string':'angka'}
 }
 
 bindo.sistem.validasiNama=namaVariabel=>{
+  if(/[!@#$%^&*()+\-=\[\]{};':"\\|,.<>\/?]/.test(namaVariabel.isi))bindo.sistem.error("Nama variabel, fungsi, ataupun parameter tidak boleh mengandung simbol");
   if(namaVariabel.tipe=="string")bindo.sistem.error("Nama variabel, fungsi, ataupun parameter tidak boleh string");
   if(namaVariabel.tipe=="angka")bindo.sistem.error("Nama variabel, fungsi, ataupun parameter tidak boleh angka");
-  if(/[!@#$%^&*()+\-=\[\]{};':"\\|,.<>\/?]/.test(namaVariabel.isi))bindo.sistem.error("Nama variabel, fungsi, ataupun parameter tidak boleh mengandung simbol");
   return namaVariabel.isi;
 }
 
@@ -181,10 +192,8 @@ bindo.sintaks.ingat=parameter=>{
   else{
     bindo.sistem.error(konjungsi+' bukanlah kongjungsi yang tepat, pililah "adalah" atau "pasti"');
   }
-
-  let isi = parameter[2];
   
-  let konten = bindo.sistem.dapatkan(isi);
+  let konten = bindo.sistem.dapatkan(parameter[2]);
   if(bindo.variabel.has(namaVariabel) && bindo.variabel.get(namaVariabel).konstan)bindo.sistem.error("Variabel "+namaVariabel+" adalah konstan sehingga isinya tidak bisa diubah.");
   konten.konstan=konstan;
   bindo.variabel.set(namaVariabel,konten);

@@ -14,8 +14,8 @@ Untuk menambahkan compiler Bindo caranya seperti menambahkan library JavaScript 
   ```
 4. Kemudian kamu bisa kreasikan kode di atas untuk membuat code editor bindo sesuai kreasimu. Kunjungi [index.html](index.html) untuk melihat penerapannya
 
-# Setup tambahan bindo
-Kamu bisa mensetup beberapa perilaku bindo sebelum mulai menjalankan fungsi bindo.jalankan(), di antaranya:
+# Konfigurasi bindo
+Kamu bisa menkonfigurasi beberapa perilaku bindo sebelum mulai menjalankan fungsi bindo.jalankan(), di antaranya:
 ## 1. bindo.console (Default: true)
   ```
   bindo.console = (true/false)
@@ -25,4 +25,24 @@ Kamu bisa mensetup beberapa perilaku bindo sebelum mulai menjalankan fungsi bind
   ```
   bindo.output = (Elemen DOM)
   ```
-  Setelah mensetup bindo.console menjadi false, kamu perlu menyetel pada elemen HTML apa output akan ditampilkan dengan mengisi bindo.output dengan elemen DOM (bisa menggunakan document.getElementById() atau document.querySelector())
+  Setelah mensetup bindo.console menjadi false, kamu perlu menyetel pada elemen HTML apa output akan ditampilkan dengan mengisi bindo.output dengan elemen DOM
+
+# Styling output bindo
+  ## 1. Error
+  Error yang dioutput bindo ke dalam elemen HTML akan dibungkus dengan tag span dengan class **bindo-error**. Contoh jika anda ingin mengubah warna error bindo menjadi warna merah
+  ```
+  <style>
+    .bindo-error{
+      color: red;
+    }
+  </style>
+  ```
+  ## 2. Success
+   Bindo akan mengoutput sebuah pesan dan informasi waktu eksekusi ketika seluruh kode berhasil dijalankan, output yang dihasilkan ke sebuah elemen HTML akan dibungkus dengan tag span dengan class **bindo-success**. Contoh jika anda ingin mengubah warna pesan sukses bindo menjadi warna hijau
+  ```
+  <style>
+    .bindo-success{
+      color: green;
+    }
+  </style>
+  ```
