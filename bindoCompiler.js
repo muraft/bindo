@@ -39,7 +39,7 @@ bindo.jalankan=kode=>{
     else{bindo.sistem.error('Perintah "'+ini.perintah+'" tidak tersedia dalam bahasa pemrograman ini.')}
   }
   let sukses='Proses menjalankan berhasil ('+(performance.now()-waktuMulai)+' ms)';
-  if(!bindo.konsol)bindo.output.innerHTML=bindo.proses.stringOutput+'<span class="bindo-succes">'+sukses+'</span>';
+  if(!bindo.konsol)bindo.output.innerHTML=bindo.proses.stringOutput+'<span class="bindo-success">'+sukses+'</span>';
   else{bindo.sistem.tampilkan(sukses)}
 }
 
