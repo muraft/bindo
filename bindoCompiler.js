@@ -27,8 +27,8 @@ bindo.jalankan=kode=>{
     let isiBaris=baris[bindo.proses.indexBaris];
     if(isiBaris.trim()=='' || isiBaris.startsWith("//"))continue;
     let ini = bindo.sistem.bongkar(isiBaris);
-    if(bindo.proses.hasilJika[bindo.proses.kedalamanJika]===false && ini.perintah!="akhiri")continue;
     if(bindo.proses.dalamFungsi && ini.perintah!="akhiri")continue;
+    if(bindo.proses.hasilJika[bindo.proses.kedalamanJika]===false && ini.perintah!="akhiri")continue;
     
     if(ini.perintah=="ingat")bindo.sintaks.ingat(ini.parameter);
     else if(ini.perintah=="tulis" || ini.perintah=="tampilkan")bindo.sintaks.tulis(ini.parameter);
@@ -246,6 +246,7 @@ bindo.sintaks.akhiri=parameter=>{
     bindo.sistem.error("Perintah ini membutuhkan 1 parameter.")
   }
   if(parameter[0].isi.toLowerCase()=="jika"){
+    if(bindo.proses.dalamFungsi)return;
     if(bindo.proses.kedalamanJika<=0)bindo.sistem.error('Tidak bisa mengakhiri perintah "jika" karena tidak ada perintah tersebut yang sedang berjalan');
     bindo.proses.kedalamanJika--;
   }
@@ -254,8 +255,8 @@ bindo.sintaks.akhiri=parameter=>{
       bindo.proses.indexBaris=bindo.proses.checkpoint;
       bindo.proses.fungsiBerjalan=null;
     }
-    else{
-      if(!bindo.proses.dalamFungsi)bindo.sistem.error('Tidak bisa mengakhiri perintah "fungsi" karena tidak ada fungsi yang sedang dideklarasi');
+  else{
+    if(!bindo.proses.dalamFungsi)bindo.sistem.error('Tidak bisa mengakhiri perintah "fungsi" karena tidak ada fungsi yang sedang dideklarasi');
       bindo.fungsi.set(bindo.proses.dalamFungsi.namaFungsi,{
       argumen:bindo.proses.dalamFungsi.argumen,
       indexAwal:bindo.proses.dalamFungsi.indexAwal
