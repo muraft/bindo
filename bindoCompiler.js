@@ -134,10 +134,11 @@ bindo.sistem.dapatkan=konten=>{
   if(!Array.isArray(konten))konten=[konten];
   let ketemuString=false;
   return {isi:konten.reduce((a,b,i)=>{
-    if(/[\d\+\-\*\/()]/.test(b.isi) && !/[!@#$%^&_=\[\]{};':"\\|,.<>?$]/.test(b.isi))b.tipe='angka';
+    if(b.tipe=='keyword' && /[\d\+\-\*\/()]/.test(b.isi) && !/[!@#$%^&_=\[\]{};':"\\|,.<>?$]/.test(b.isi))b.tipe='angka';
     if(b.tipe=='angka'){
       let isi;
       b.isi.split(/[\+\-\*\/()]/).forEach(v=>{
+          if(v==0)return;
           if(v.trim().length && !parseFloat(v)){
             let konten = bindo.sistem.dapatkan({isi:v,tipe:'keyword'});
             if(konten.tipe!='angka')bindo.sistem.error('Tidak bisa melakukan operasi hitung karena variabel "'+v+'" bukan berisi angka');
@@ -218,7 +219,7 @@ bindo.sintaks.jika=parameter=>{
   let pernyataan=parameter[1].isi.toLowerCase();
   let hasil;
   if(pernyataan=="sama-dengan" || pernyataan=="=" || pernyataan=="==" || pernyataan=="adalah"){
-    if(variabel1.isi==variabel2.isi)hasil=true;
+    if(variabel1.isi===variabel2.isi)hasil=true;
     else{hasil=false}
   }
   else if(pernyataan=="lebih-dari" || pernyataan==">"){
@@ -232,7 +233,7 @@ bindo.sintaks.jika=parameter=>{
     else{hasil=false}
   }
   else if(pernyataan=="berbeda-dengan" || pernyataan=="!=" || pernyataan=="bukan"){
-    if(variabel1.isi!=variabel2.isi)hasil=true;
+    if(variabel1.isi!==variabel2.isi)hasil=true;
     else{hasil=false}
   }
   else{bindo.sistem.error('Pernyataan "'+pernyataan+'" bukanlah pernyataan yang tepat untuk membandingkan dua variabel')}
@@ -246,20 +247,21 @@ bindo.sintaks.akhiri=parameter=>{
     bindo.sistem.error("Perintah ini membutuhkan 1 parameter.")
   }
   if(parameter[0].isi.toLowerCase()=="jika"){
-    if(bindo.proses.dalamFungsi)return;
-    if(bindo.proses.kedalamanJika<=0)bindo.sistem.error('Tidak bisa mengakhiri perintah "jika" karena tidak ada perintah tersebut yang sedang berjalan');
-    bindo.proses.kedalamanJika--;
+    if(!bindo.proses.dalamFungsi){
+      if(bindo.proses.kedalamanJika<=0)bindo.sistem.error('Tidak bisa mengakhiri perintah "jika" karena tidak ada perintah tersebut yang sedang berjalan');
+      bindo.proses.kedalamanJika--;
+    }
   }
   else if(parameter[0].isi.toLowerCase()=="fungsi"){
     if(bindo.proses.fungsiBerjalan){
       bindo.proses.indexBaris=bindo.proses.checkpoint;
       bindo.proses.fungsiBerjalan=null;
     }
-  else{
-    if(!bindo.proses.dalamFungsi)bindo.sistem.error('Tidak bisa mengakhiri perintah "fungsi" karena tidak ada fungsi yang sedang dideklarasi');
+    else{
+      if(!bindo.proses.dalamFungsi)bindo.sistem.error('Tidak bisa mengakhiri perintah "fungsi" karena tidak ada fungsi yang sedang dideklarasi');
       bindo.fungsi.set(bindo.proses.dalamFungsi.namaFungsi,{
-      argumen:bindo.proses.dalamFungsi.argumen,
-      indexAwal:bindo.proses.dalamFungsi.indexAwal
+        argumen:bindo.proses.dalamFungsi.argumen,
+        indexAwal:bindo.proses.dalamFungsi.indexAwal
       });
       bindo.proses.dalamFungsi=null;
     }
@@ -297,6 +299,7 @@ bindo.sintaks.jalankan=parameter=>{
       fungsi.argumen.set(Array.from(fungsi.argumen.keys())[i],bindo.sistem.dapatkan(v))
     });
   }
+  console.log(fungsi)
   bindo.proses.fungsiBerjalan=fungsi;
   bindo.proses.checkpoint=bindo.proses.indexBaris;
   bindo.proses.indexBaris=fungsi.indexAwal;
