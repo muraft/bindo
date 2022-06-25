@@ -55,7 +55,9 @@ bindo.sistem.bongkar=baris=>{
         if(/[\+\-\*\/.()]/.test(w) && w.length==1)bindo.sistem.error("Operasi hitung gagal dilakukan, cobalah cek tipe data milik data yang sedang dioperasikan");
         hasil.push({
         isi:w,
-        tipe:(/[\d\+\-\*\/.()]/.test(w) && !/[!@#$%^&_=\[\]{};':"\\|,<>?$]/.test(w))?'angka':'keyword'
+        tipe:(/[\d\+\-\*\/.()]/.test(w) && !/[!@#$%^&_=\[\]{};':"\\|,<>?$]/.test(w))?
+        ((!/[\+\-\*\/]/.test(w) && /\d/.test(w) && /[A-Za-z]/.test(w))?'keyword':'angka')
+        :'keyword'
       })})
     }
     else{
@@ -134,12 +136,12 @@ bindo.sistem.dapatkan=konten=>{
   if(!Array.isArray(konten))konten=[konten];
   let ketemuString=false;
   return {isi:konten.reduce((a,b,i)=>{
-    if(b.tipe=='keyword' && /[\d\+\-\*\/.()]/.test(b.isi) && !/[!@#$%^&_=\[\]{};':"\\|,<>?$]/.test(b.isi))b.tipe='angka';
+    if(b.tipe=='keyword' && /\d/.test(b.isi) && /[\+\-\*\/.()]/.test(b.isi) && !/[!@#$%^&_=\[\]{};':"\\|,<>?$]/.test(b.isi))b.tipe='angka';
     if(b.tipe=='angka'){
       let isi;
       b.isi.split(/[\+\-\*\/()]/).forEach(v=>{
           if(v==0)return;
-          if(v.trim().length && !parseFloat(v)){
+          if(v.trim().length && /[A-Za-z]/.test(v)){
             let konten = bindo.sistem.dapatkan({isi:v,tipe:'keyword'});
             if(konten.tipe!='angka')bindo.sistem.error('Tidak bisa melakukan operasi hitung karena variabel "'+v+'" bukan berisi angka');
             b.isi=b.isi.replace(RegExp(v),konten.isi);

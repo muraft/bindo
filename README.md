@@ -19,8 +19,21 @@ Untuk saat ini Bindo masih berada di versi awal sehingga hanya memiliki sedikit 
 
 Untuk mencoba Bindo secara online, kamu bisa kunjungi https://muraft.github.io/bindo
 
+# Instalasi interpreter
+```
+<textarea id="kode"></textarea>
+<br>
+<button onclick="jalankan()"></button>
+<script src="https://cdn.jsdelivr.net/gh/muraft/bindo/bindoInterpreter.js"></script>
+<script>
+     function jalankan(){
+          bindo.jalankan(document.getElementById('kode').value)
+     }
+</script>
+```
+
 ## Pelajari lebih lanjut
 - Untuk mempelajari dasar-dasar bahasa ini, kunjungi [tutorial.md](tutorial.md)
 - Untuk memlihat daftar perintah di bahasa ini dan penggunaannya, kunjungi [perintah.md](perintah.md)
-- Untuk menggunakan dan menyetel compiler Bindo di websitemu, kunjungi [penyetelan.md](penyetelan.md)
+- Untuk mengkonfigurasi interpreter Bindo di websitemu, kunjungi [konfigurasi.md](konfigurasi.md)
 - Untuk melihat changelog dan versi terbaru bahasa ini, kunjungi [releases](https://github.com/coolraptor08/bindo/releases)
