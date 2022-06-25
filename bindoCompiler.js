@@ -52,10 +52,10 @@ bindo.sistem.bongkar=baris=>{
   baris.split('"').forEach((v,i)=>{
     if(i%2==0){
       v.trim().split(" ").forEach(w=>{
-        if(/[\+\-\*\/()]/.test(w) && w.length==1)bindo.sistem.error("Operasi hitung gagal dilakukan, cobalah cek tipe data milik data yang sedang dioperasikan");
+        if(/[\+\-\*\/.()]/.test(w) && w.length==1)bindo.sistem.error("Operasi hitung gagal dilakukan, cobalah cek tipe data milik data yang sedang dioperasikan");
         hasil.push({
         isi:w,
-        tipe:(/[\d\+\-\*\/()]/.test(w) && !/[!@#$%^&_=\[\]{};':"\\|,.<>?$]/.test(w))?'angka':'keyword'
+        tipe:(/[\d\+\-\*\/.()]/.test(w) && !/[!@#$%^&_=\[\]{};':"\\|,<>?$]/.test(w))?'angka':'keyword'
       })})
     }
     else{
@@ -67,26 +67,26 @@ bindo.sistem.bongkar=baris=>{
   let gabung = false;
   hasil.forEach((v,i)=>{
     if(hasil[i].tipe=='keyword'){
-    if(hasil[i].isi.startsWith('.') && hasil[i].isi.endsWith('.')){
+    if(hasil[i].isi.startsWith('&') && hasil[i].isi.endsWith('&')){
       if(hasilFinal[hasilFinal.length-1]==undefined)hasilFinal[hasilFinal.length-1]=[];
-      hasil[i].isi.split('.').forEach(w=>{
+      hasil[i].isi.split('&').forEach(w=>{
         if(w.trim().length){
           hasilFinal[hasilFinal.length-1].push({isi:w,tipe:hasil[i].tipe});
         }
       })
       gabung=true;
     }
-    else if(hasil[i].isi.startsWith('.')){
+    else if(hasil[i].isi.startsWith('&')){
       if(hasilFinal[hasilFinal.length-1]==undefined)hasilFinal[hasilFinal.length-1]=[];
-      hasil[i].isi.split('.').forEach(w=>{
+      hasil[i].isi.split('&').forEach(w=>{
         if(w.trim().length){
           hasilFinal[hasilFinal.length-1].push({isi:w,tipe:hasil[i].tipe})
         }
       })
     }
-    else if(hasil[i].isi.endsWith('.')){
+    else if(hasil[i].isi.endsWith('&')){
       hasilFinal[hasilFinal.length]=[];
-      hasil[i].isi.split('.').forEach(w=>{
+      hasil[i].isi.split('&').forEach(w=>{
         if(w.trim().length){
           hasilFinal[hasilFinal.length-1].push({isi:w,tipe:hasil[i].tipe});
         }
@@ -95,7 +95,7 @@ bindo.sistem.bongkar=baris=>{
     }
     else{
       hasilFinal[hasilFinal.length]=[];
-      hasil[i].isi.split('.').forEach(w=>{
+      hasil[i].isi.split('&').forEach(w=>{
         hasilFinal[hasilFinal.length-1].push({isi:w,tipe:hasil[i].tipe})
       })
     }
@@ -134,7 +134,7 @@ bindo.sistem.dapatkan=konten=>{
   if(!Array.isArray(konten))konten=[konten];
   let ketemuString=false;
   return {isi:konten.reduce((a,b,i)=>{
-    if(b.tipe=='keyword' && /[\d\+\-\*\/()]/.test(b.isi) && !/[!@#$%^&_=\[\]{};':"\\|,.<>?$]/.test(b.isi))b.tipe='angka';
+    if(b.tipe=='keyword' && /[\d\+\-\*\/.()]/.test(b.isi) && !/[!@#$%^&_=\[\]{};':"\\|,<>?$]/.test(b.isi))b.tipe='angka';
     if(b.tipe=='angka'){
       let isi;
       b.isi.split(/[\+\-\*\/()]/).forEach(v=>{
