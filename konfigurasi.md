@@ -1,18 +1,8 @@
-# Menambahkan compiler Bindo ke websitemu
-Untuk menambahkan compiler Bindo caranya seperti menambahkan library JavaScript lain, yaitu:
-1. Unduh file bindoCompiler.js
-2. Tulis kode ini di bagian paling akhir sebelum tag </body> di file html mu
-  ```
-  <script src="bindoCompiler.js"></script>
-  ```
-3. Untuk menjalankan kode bindo, jalankan function bindo.jalankan(string) dengan parameter string kode yang ingin dijalankan
-  ```
-  <script src="bindoCompiler.js"></script>
-  <script>
-    bindo.jalankan('tampilkan "Halo dunia!"')
-  </script>
-  ```
-4. Kemudian kamu bisa kreasikan kode di atas untuk membuat code editor bindo sesuai kreasimu. Kunjungi [index.html](index.html) untuk melihat penerapannya
+# Menjalankan kode bindo
+Untuk menjalankan kode bindo, gunakan bindo.jalankan() dan isilah parameter dengan string kode
+```
+bindo.jalankan('tulis "halo dunia"')
+```
 
 # Konfigurasi bindo
 Kamu bisa menkonfigurasi beberapa perilaku bindo sebelum mulai menjalankan fungsi bindo.jalankan(), di antaranya:
