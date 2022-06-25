@@ -153,10 +153,10 @@ maka akan menghasilkan error:
 ```
 Terdapat kesalahan pada baris ke-4: Tidak bisa melakukan operasi hitung karena variabel "a" bukan berisi angka
 ```
-Jka kamu ingin mencoba menggabungkan string, gunakan simbol titik(.) seperti ini:
+Jka kamu ingin mencoba menggabungkan string, gunakan simbol dan (&) seperti ini:
 ```
 ingat nama adalah "Rafie"
-tulis "Halo nama saya ".nama."!"
+tulis "Halo nama saya " & nama & "!"
 ```
 Maka akan menghasilkan:
 ```
@@ -167,7 +167,7 @@ Jika kamu mencoba menggabungkan angka dengan penggabung string seperti ini:
 ingat a adalah 5
 ingat b adalah 7
 
-tulis 5.7
+tulis 5 & 7
 ```
 maka akan menghasilkan
 ```
@@ -313,7 +313,7 @@ Halo nama saya Joko
 untuk mendeklarasikan parameter, kamu bisa menulis kata "perlu" kemudian diiringi dengan nama parameternya. Kemudian untuk mengisi nilai parameter, kamu bisa menulis kata "dengan" diiringi dengan data yang ingin kamu isi ke parameternya. Jumlah parameter pada fungsi bisa lebih dari satu, contoh:
 ```
 fungsi hitungLuasBalok perlu panjang lebar tinggi
-tulis "Luas balok adalah ".panjang*lebar*tinggi
+tulis "Luas balok adalah " & panjang*lebar*tinggi
 akhiri fungsi
 
 jalankan hitungLuasBalok dengan 5 7 8

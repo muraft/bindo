@@ -13,14 +13,14 @@ bindo.init=()=>{
     dalamFungsi:null,
     fungsiBerjalan:null,
     checkpoint:null
-  }
-}
+  };
+};
 
 bindo.jalankan=kode=>{
-  let waktuMulai = performance.now()
+  let waktuMulai = performance.now();
   bindo.init();
 
-  let baris = kode.split('\n')
+  let baris = kode.split('\n');
   while(bindo.proses.indexBaris<baris.length-1)
   {
     bindo.proses.indexBaris++;
@@ -41,7 +41,7 @@ bindo.jalankan=kode=>{
   let sukses='Proses menjalankan berhasil ('+(performance.now()-waktuMulai)+' ms)';
   if(!bindo.konsol)bindo.output.innerHTML=bindo.proses.stringOutput+'<span class="bindo-success">'+sukses+'</span>';
   else{bindo.sistem.tampilkan(sukses)}
-}
+};
 
 
 // ##### Fungsi Sistem #####
@@ -58,12 +58,12 @@ bindo.sistem.bongkar=baris=>{
         tipe:(/[\d\+\-\*\/.()]/.test(w) && !/[!@#$%^&_=\[\]{};':"\\|,<>?$]/.test(w))?
         ((!/[\+\-\*\/]/.test(w) && /\d/.test(w) && /[A-Za-z]/.test(w))?'keyword':'angka')
         :'keyword'
-      })})
+      })});
     }
     else{
-      hasil.push({isi:v,tipe:"string"})
+      hasil.push({isi:v,tipe:"string"});
     }
-  })
+  });
   hasil=hasil.filter(b=>(b.isi.toString().trim()!="" && b.tipe!='string') || b.tipe=='string');
   let hasilFinal=[];
   let gabung = false;
@@ -75,16 +75,16 @@ bindo.sistem.bongkar=baris=>{
         if(w.trim().length){
           hasilFinal[hasilFinal.length-1].push({isi:w,tipe:hasil[i].tipe});
         }
-      })
+      });
       gabung=true;
     }
     else if(hasil[i].isi.startsWith('&')){
       if(hasilFinal[hasilFinal.length-1]==undefined)hasilFinal[hasilFinal.length-1]=[];
       hasil[i].isi.split('&').forEach(w=>{
         if(w.trim().length){
-          hasilFinal[hasilFinal.length-1].push({isi:w,tipe:hasil[i].tipe})
+          hasilFinal[hasilFinal.length-1].push({isi:w,tipe:hasil[i].tipe});
         }
-      })
+      });
     }
     else if(hasil[i].isi.endsWith('&')){
       hasilFinal[hasilFinal.length]=[];
@@ -92,45 +92,45 @@ bindo.sistem.bongkar=baris=>{
         if(w.trim().length){
           hasilFinal[hasilFinal.length-1].push({isi:w,tipe:hasil[i].tipe});
         }
-      })
+      });
       gabung=true;
     }
     else{
       hasilFinal[hasilFinal.length]=[];
       hasil[i].isi.split('&').forEach(w=>{
-        hasilFinal[hasilFinal.length-1].push({isi:w,tipe:hasil[i].tipe})
-      })
+        hasilFinal[hasilFinal.length-1].push({isi:w,tipe:hasil[i].tipe});
+      });
     }
     }
     else{
       if(!gabung)hasilFinal[hasilFinal.length]=[hasil[i]];
       else{
-        hasilFinal[hasilFinal.length-1]=hasilFinal[hasilFinal.length-1].concat(hasil[i])
+        hasilFinal[hasilFinal.length-1]=hasilFinal[hasilFinal.length-1].concat(hasil[i]);
         gabung=false;
       }
     }
-  })
+  });
   hasilFinal=hasilFinal.map(w=>w.length>1?w:w[0]);
   if(Array.isArray(hasilFinal[0]))bindo.sistem.error('Perintah tidak boleh menggunakan string concat');
   
   return {
     perintah: hasilFinal[0].isi.toLowerCase().trim(),
     parameter: hasilFinal.slice(1)
-  }
-}
+  };
+};
 
 bindo.sistem.error=pesan=>{
   let info='Terdapat kesalahan pada baris ke-'+(bindo.proses.indexBaris+1)+': ';
   if(!bindo.konsol)bindo.output.innerHTML=bindo.proses.stringOutput+'<span class="bindo-error">'+info+pesan+'</span><br>';
   throw Error(info+pesan);
-}
+};
 
 bindo.sistem.tampilkan=kalimat=>{
   if(bindo.konsol)console.log(kalimat);
   else{
     bindo.proses.stringOutput+=kalimat+"<br>";
   }
-}
+};
 
 bindo.sistem.dapatkan=konten=>{
   if(!Array.isArray(konten))konten=[konten];
@@ -156,7 +156,7 @@ bindo.sistem.dapatkan=konten=>{
       if(bindo.proses.fungsiBerjalan){
         if(bindo.proses.fungsiBerjalan.argumen.has(konten[i].isi)){
           let c=bindo.proses.fungsiBerjalan.argumen.get(konten[i].isi);
-          if(c===null)bindo.sistem.error('Parameter "'+konten[i].isi+'" belum terisi')
+          if(c===null)bindo.sistem.error('Parameter "'+konten[i].isi+'" belum terisi');
           if(c.tipe=='string')ketemuString=true;
           return a+c.isi;
         }
@@ -184,7 +184,7 @@ bindo.sintaks={}
 
 bindo.sintaks.ingat=parameter=>{
   if(parameter.length<3){
-    bindo.sistem.error("Perintah ini membutuhkan 3 parameter.")
+    bindo.sistem.error("Perintah ini membutuhkan 3 parameter.");
   }
 
   let namaVariabel = bindo.sistem.validasiNama(parameter[0]);
@@ -204,7 +204,7 @@ bindo.sintaks.ingat=parameter=>{
 
 bindo.sintaks.tulis=parameter=>{
   if(parameter.length<1){
-    bindo.sistem.error("Perintah ini membutuhkan 1 parameter.")
+    bindo.sistem.error("Perintah ini membutuhkan 1 parameter.");
   }
 
   let konten=bindo.sistem.dapatkan(parameter[0]);
@@ -213,7 +213,7 @@ bindo.sintaks.tulis=parameter=>{
 
 bindo.sintaks.jika=parameter=>{
   if(parameter.length<3){
-    bindo.sistem.error("Perintah ini membutuhkan 3 parameter.")
+    bindo.sistem.error("Perintah ini membutuhkan 3 parameter.");
   }
   let variabel1=bindo.sistem.dapatkan(parameter[0]);
   let variabel2=bindo.sistem.dapatkan(parameter[2]);
@@ -225,12 +225,12 @@ bindo.sintaks.jika=parameter=>{
     else{hasil=false}
   }
   else if(pernyataan=="lebih-dari" || pernyataan==">"){
-    if(variabel1.tipe!="angka" || variabel2.tipe!="angka")bindo.sistem.error("Tidak bisa menggunakan tanda lebih dari karena variabel yang dibandingkan bukanlah angka")
+    if(variabel1.tipe!="angka" || variabel2.tipe!="angka")bindo.sistem.error("Tidak bisa menggunakan tanda lebih dari karena variabel yang dibandingkan bukanlah angka");
     if(parseFloat(variabel1.isi)>parseFloat(variabel2.isi))hasil=true;
     else{hasil=false}
   }
   else if(pernyataan=="kurang-dari" || pernyataan=="<"){
-    if(variabel1.tipe!="angka" || variabel2.tipe!="angka")bindo.sistem.error("Tidak bisa menggunakan tanda kurang dari karena variabel yang dibandingkan bukanlah angka")
+    if(variabel1.tipe!="angka" || variabel2.tipe!="angka")bindo.sistem.error("Tidak bisa menggunakan tanda kurang dari karena variabel yang dibandingkan bukanlah angka");
     if(parseFloat(variabel1.isi)<parseFloat(variabel2.isi))hasil=true;
     else{hasil=false}
   }
@@ -273,14 +273,14 @@ bindo.sintaks.akhiri=parameter=>{
 
 bindo.sintaks.fungsi=parameter=>{
   if(parameter.length<1){
-    bindo.sistem.error("Perintah ini minimal membutuhkan 2 parameter.")
+    bindo.sistem.error("Perintah ini minimal membutuhkan 2 parameter.");
   }
-  if(bindo.proses.dalamFungsi)bindo.sistem.error("Tidak bisa mendeklarasikan fungsi karena masih ada pendeklarasian fungsi yang belum diakhiri")
+  if(bindo.proses.dalamFungsi)bindo.sistem.error("Tidak bisa mendeklarasikan fungsi karena masih ada pendeklarasian fungsi yang belum diakhiri");
   let namaFungsi = bindo.sistem.validasiNama(parameter[0]);
   
   let argumen = new Map();
   if(parameter.length>1){
-    if(parameter[1].isi.toLowerCase()!='perlu')bindo.sistem.error('Parameter kedua fungsi harus bertuliskan "perlu"')
+    if(parameter[1].isi.toLowerCase()!='perlu')bindo.sistem.error('Parameter kedua fungsi harus bertuliskan "perlu"');
     parameter.slice(2).forEach(v=>{
       argumen.set(bindo.sistem.validasiNama(v),null);
     });
@@ -293,7 +293,7 @@ bindo.sintaks.jalankan=parameter=>{
     bindo.sistem.error("Perintah ini minimal membutuhkan 1 parameter.")
   }
   if(bindo.proses.fungsiBerjalan)bindo.sistem.error('Tidak bisa menjalankan fungsi di dalam fungsi');
-  if(!bindo.fungsi.has(parameter[0].isi))bindo.sistem.error('Tidak ada fungsi yang bernama "'+parameter[0].isi+'"')
+  if(!bindo.fungsi.has(parameter[0].isi))bindo.sistem.error('Tidak ada fungsi yang bernama "'+parameter[0].isi+'"');
   let fungsi = bindo.fungsi.get(parameter[0].isi);
   if(parameter.length>1){
     if(parameter[1].isi!='dengan')bindo.sistem.error('Paramater kedua harus bertuliskan "dengan"')
@@ -301,7 +301,7 @@ bindo.sintaks.jalankan=parameter=>{
       fungsi.argumen.set(Array.from(fungsi.argumen.keys())[i],bindo.sistem.dapatkan(v))
     });
   }
-  console.log(fungsi)
+  
   bindo.proses.fungsiBerjalan=fungsi;
   bindo.proses.checkpoint=bindo.proses.indexBaris;
   bindo.proses.indexBaris=fungsi.indexAwal;
