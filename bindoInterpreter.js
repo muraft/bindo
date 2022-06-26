@@ -11,8 +11,8 @@ bindo.init=()=>{
     kedalamanJika:0,
     hasilJika:[null],
     dalamFungsi:null,
-    fungsiBerjalan:null,
-    checkpoint:null
+    fungsiBerjalan:[],
+    checkpoint:[]
   };
 };
 
@@ -153,9 +153,9 @@ bindo.sistem.dapatkan=konten=>{
       return a+isi;
     }
     else if(b.tipe=='keyword'){
-      if(bindo.proses.fungsiBerjalan){
-        if(bindo.proses.fungsiBerjalan.argumen.has(konten[i].isi)){
-          let c=bindo.proses.fungsiBerjalan.argumen.get(konten[i].isi);
+      if(bindo.proses.fungsiBerjalan.length){
+        if(bindo.proses.fungsiBerjalan[bindo.proses.fungsiBerjalan.length-1].argumen.has(konten[i].isi)){
+          let c=bindo.proses.fungsiBerjalan[bindo.proses.fungsiBerjalan.length-1].argumen.gett(konten[i].isi);
           if(c===null)bindo.sistem.error('Parameter "'+konten[i].isi+'" belum terisi');
           if(c.tipe=='string')ketemuString=true;
           return a+c.isi;
@@ -255,9 +255,10 @@ bindo.sintaks.akhiri=parameter=>{
     }
   }
   else if(parameter[0].isi.toLowerCase()=="fungsi"){
-    if(bindo.proses.fungsiBerjalan){
-      bindo.proses.indexBaris=bindo.proses.checkpoint;
-      bindo.proses.fungsiBerjalan=null;
+    if(bindo.proses.fungsiBerjalan.length){
+      bindo.proses.indexBaris=bindo.proses.checkpoint[bindo.proses.checkpoint.length-1];
+      bindo.proses.checkpoint.pop();
+      bindo.proses.fungsiBerjalan.pop();
     }
     else{
       if(!bindo.proses.dalamFungsi)bindo.sistem.error('Tidak bisa mengakhiri perintah "fungsi" karena tidak ada fungsi yang sedang dideklarasi');
@@ -275,7 +276,8 @@ bindo.sintaks.fungsi=parameter=>{
   if(parameter.length<1){
     bindo.sistem.error("Perintah ini minimal membutuhkan 2 parameter.");
   }
-  if(bindo.proses.dalamFungsi)bindo.sistem.error("Tidak bisa mendeklarasikan fungsi karena masih ada pendeklarasian fungsi yang belum diakhiri");
+
+  if(bindo.proses.fungsiBerjalan.length)bindo.sistem.error("Tidak bisa mendeklarasikan fungsi karena masih ada pendeklarasian fungsi yang belum diakhiri");
   let namaFungsi = bindo.sistem.validasiNama(parameter[0]);
   
   let argumen = new Map();
@@ -292,7 +294,7 @@ bindo.sintaks.jalankan=parameter=>{
   if(parameter.length<1){
     bindo.sistem.error("Perintah ini minimal membutuhkan 1 parameter.")
   }
-  if(bindo.proses.fungsiBerjalan)bindo.sistem.error('Tidak bisa menjalankan fungsi di dalam fungsi');
+
   if(!bindo.fungsi.has(parameter[0].isi))bindo.sistem.error('Tidak ada fungsi yang bernama "'+parameter[0].isi+'"');
   let fungsi = bindo.fungsi.get(parameter[0].isi);
   if(parameter.length>1){
@@ -302,7 +304,7 @@ bindo.sintaks.jalankan=parameter=>{
     });
   }
   
-  bindo.proses.fungsiBerjalan=fungsi;
-  bindo.proses.checkpoint=bindo.proses.indexBaris;
+  bindo.proses.fungsiBerjalan.push(fungsi);
+  bindo.proses.checkpoint.push(bindo.proses.indexBaris);
   bindo.proses.indexBaris=fungsi.indexAwal;
 }
