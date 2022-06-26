@@ -15,7 +15,7 @@ Hasil:
 Assalamualaikum
 ```
 
-Untuk saat ini Bindo masih berada di versi awal sehingga hanya memiliki sedikit fitur, fitur lainnya akan dikembangkan di versi mendatang
+Untuk saat ini Bindo masih berada di versi awal sehingga hanya memiliki sedikit fitur, fitur lainnya akan dikembangkan di versi mendatang. Jika kalian ingin melaporkan bug atau memberi kritik & saran, kunjungi [issues](https://github.com/muraft/bindo/issues)
 
 Untuk mencoba Bindo secara online, kamu bisa kunjungi https://muraft.github.io/bindo
 
@@ -32,7 +32,7 @@ Untuk mencoba Bindo secara online, kamu bisa kunjungi https://muraft.github.io/b
 </script>
 ```
 
-## Pelajari lebih lanjut
+# Pelajari lebih lanjut
 - Untuk mempelajari dasar-dasar bahasa ini, kunjungi [tutorial.md](tutorial.md)
 - Untuk memlihat daftar perintah di bahasa ini dan penggunaannya, kunjungi [perintah.md](perintah.md)
 - Untuk mengkonfigurasi interpreter Bindo di websitemu, kunjungi [konfigurasi.md](konfigurasi.md)
