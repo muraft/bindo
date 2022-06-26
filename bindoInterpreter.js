@@ -67,8 +67,9 @@ bindo.sistem.bongkar=baris=>{
   hasil=hasil.filter(b=>(b.isi.toString().trim()!="" && b.tipe!='string') || b.tipe=='string');
   let hasilFinal=[];
   let gabung = false;
+  
   hasil.forEach((v,i)=>{
-    if(hasil[i].tipe=='keyword'){
+    if(hasil[i].tipe=='keyword' && hasil[i].isi.includes('&')){
     if(hasil[i].isi.startsWith('&') && hasil[i].isi.endsWith('&')){
       if(hasilFinal[hasilFinal.length-1]==undefined)hasilFinal[hasilFinal.length-1]=[];
       hasil[i].isi.split('&').forEach(w=>{
@@ -208,7 +209,8 @@ bindo.sintaks.tulis=parameter=>{
   }
 
   let konten=bindo.sistem.dapatkan(parameter[0]);
-  bindo.sistem.tampilkan(konten.isi);
+  if(parameter[1] && parameter[1].isi.toLowerCase()=="!info")bindo.sistem.tampilkan(`(${konten.tipe}): ${konten.isi}`)
+  else {bindo.sistem.tampilkan(konten.isi)}
 }
 
 bindo.sintaks.jika=parameter=>{
