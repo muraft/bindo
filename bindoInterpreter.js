@@ -155,10 +155,10 @@ bindo.sistem.dapatkan=konten=>{
     else if(b.tipe=='keyword'){
       if(bindo.proses.fungsiBerjalan.length){
         if(bindo.proses.fungsiBerjalan[bindo.proses.fungsiBerjalan.length-1].argumen.has(konten[i].isi)){
-          let c=bindo.proses.fungsiBerjalan[bindo.proses.fungsiBerjalan.length-1].argumen.gett(konten[i].isi);
-          if(c===null)bindo.sistem.error('Parameter "'+konten[i].isi+'" belum terisi');
-          if(c.tipe=='string')ketemuString=true;
-          return a+c.isi;
+          let c=bindo.proses.fungsiBerjalan[bindo.proses.fungsiBerjalan.length-1].argumen.get(konten[i].isi);
+          //if(c===null)bindo.sistem.error('Parameter "'+konten[i].isi+'" belum terisi');
+          if(c && c.tipe=='string')ketemuString=true;
+          if(c)return a+c.isi;
         }
       }
       if(!bindo.variabel.has(b.isi))bindo.sistem.error('Tidak ada variabel yang bernama "'+b.isi+'"');
