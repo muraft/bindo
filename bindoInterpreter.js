@@ -33,13 +33,15 @@ bindo.jalankan=kode=>{
     if(ini.perintah=="ingat")bindo.sintaks.ingat(ini.parameter);
     else if(ini.perintah=="tulis" || ini.perintah=="tampilkan")bindo.sintaks.tulis(ini.parameter);
     else if(ini.perintah=="jika" || ini.perintah=="kalau")bindo.sintaks.jika(ini.parameter);
+    else if(ini.perintah=="atau-jika" || ini.perintah=="atau-kalau")bindo.sintaks.atauJika(ini.parameter);
+    else if(ini.perintah=="selain-itu")bindo.sintaks.selainItu(ini.parameter);
     else if(ini.perintah=="akhiri")bindo.sintaks.akhiri(ini.parameter);
     else if(ini.perintah=="fungsi")bindo.sintaks.fungsi(ini.parameter);
     else if(ini.perintah=="jalankan")bindo.sintaks.jalankan(ini.parameter);
     else{bindo.sistem.error('Perintah "'+ini.perintah+'" tidak tersedia dalam bahasa pemrograman ini.')}
   }
   let sukses='Proses menjalankan berhasil ('+(performance.now()-waktuMulai)+' ms)';
-  if(!bindo.konsol)bindo.output.innerHTML=bindo.proses.stringOutput+'<span class="bindo-success">'+sukses+'</span>';
+  if(!bindo.konsol)bindo.output.innerHTML=bindo.proses.stringOutput+'<span class="bindo-sukses">'+sukses+'</span>';
   else{bindo.sistem.tampilkan(sukses)}
 };
 
@@ -213,7 +215,7 @@ bindo.sintaks.tulis=parameter=>{
   else {bindo.sistem.tampilkan(konten.isi)}
 }
 
-bindo.sintaks.jika=parameter=>{
+bindo.sintaks.jika=(parameter,bukanJika=false)=>{
   if(parameter.length<3){
     bindo.sistem.error("Perintah ini membutuhkan 3 parameter.");
   }
@@ -244,6 +246,10 @@ bindo.sintaks.jika=parameter=>{
   
   bindo.proses.kedalamanJika++;
   bindo.proses.hasilJika[bindo.proses.kedalamanJika]=hasil;
+}
+
+bindo.sintaks.atauJika=parameter=>{
+     bindo.sintaks.jika(parameter,true)
 }
 
 bindo.sintaks.akhiri=parameter=>{

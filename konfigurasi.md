@@ -21,18 +21,14 @@ Kamu bisa menkonfigurasi beberapa perilaku bindo sebelum mulai menjalankan fungs
   ## 1. Error
   Error yang dioutput bindo ke dalam elemen HTML akan dibungkus dengan tag span dengan class **bindo-error**. Contoh jika anda ingin mengubah warna error bindo menjadi warna merah
   ```css
-  <style>
-    .bindo-error{
-      color: red;
-    }
-  </style>
+  .bindo-error{
+     color: red;
+  }
   ```
-  ## 2. Success
-   Bindo akan mengoutput sebuah pesan dan informasi waktu eksekusi ketika seluruh kode berhasil dijalankan, output yang dihasilkan ke sebuah elemen HTML akan dibungkus dengan tag span dengan class **bindo-success**. Contoh jika anda ingin mengubah warna pesan sukses bindo menjadi warna hijau
+  ## 2. Sukses
+   Bindo akan mengoutput sebuah pesan dan informasi waktu eksekusi ketika seluruh kode berhasil dijalankan, output yang dihasilkan ke sebuah elemen HTML akan dibungkus dengan tag span dengan class **bindo-sukses**. Contoh jika anda ingin mengubah warna pesan sukses bindo menjadi warna hijau
   ```css
-  <style>
-    .bindo-success{
-      color: green;
-    }
-  </style>
+  .bindo-sukses{
+     color: green;
+  }
   ```
