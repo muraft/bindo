@@ -23,8 +23,8 @@ Untuk mencoba Bindo secara online, kamu bisa kunjungi https://muraft.github.io/b
 ```javascript
 <textarea id="kode"></textarea>
 <br>
-<button onclick="jalankan()"></button>
-<script src="https://cdn.jsdelivr.net/gh/muraft/bindo/bindoInterpreter.js"></script>
+<button onclick="jalankan()">Jalankan</button>
+<script src="https://cdn.jsdelivr.net/gh/muraft/bindo/bindoInterpreter.min.js"></script>
 <script>
      function jalankan(){
           bindo.jalankan(document.getElementById('kode').value)
