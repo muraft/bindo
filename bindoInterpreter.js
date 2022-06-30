@@ -9,7 +9,7 @@ bindo.init=()=>{
     indexBaris:-1,
     stringOutput:"",
     kedalamanJika:0,
-    dataPercabangan:[{nilai:true,jumlahCabang:0,pernahBenar:false}],
+    dataPercabangan:[{nilai:true,jumlahCabang:0,pernahBenar:false,berakhir:false}],
     dalamFungsi:null,
     fungsiBerjalan:[],
     checkpoint:[]
@@ -28,12 +28,12 @@ bindo.jalankan=kode=>{
     if(isiBaris.trim()=='' || isiBaris.startsWith("//"))continue;
     let ini = bindo.sistem.bongkar(isiBaris);
     if(bindo.proses.dalamFungsi && ini.perintah!="akhiri")continue;
-    if(bindo.proses.dataPercabangan[bindo.proses.dataPercabangan.length-2] && !bindo.proses.dataPercabangan[bindo.proses.dataPercabangan.length-2].nilai && ini.perintah!="akhiri")continue;
+    if(bindo.proses.dataPercabangan[bindo.proses.dataPercabangan.length-2] && !bindo.proses.dataPercabangan[bindo.proses.dataPercabangan.length-2].nilai && ini.perintah!="akhiri" && ini.perintah!="jika")continue;
     
     if(ini.perintah=="ingat")bindo.sintaks.ingat(ini.parameter);
     else if(ini.perintah=="tulis" || ini.perintah=="tampilkan")bindo.sintaks.tulis(ini.parameter);
-    else if(ini.perintah=="jika" || ini.perintah=="kalau")bindo.sintaks.jika(ini.parameter);
-    else if(ini.perintah=="atau-jika" || ini.perintah=="atau-kalau")bindo.sintaks.atauJika(ini.parameter);
+    else if(ini.perintah=="jika")bindo.sintaks.jika(ini.parameter);
+    else if(ini.perintah=="atau-jika")bindo.sintaks.atauJika(ini.parameter);
     else if(ini.perintah=="selain-itu")bindo.sintaks.selainItu(ini.parameter);
     else if(ini.perintah=="akhiri")bindo.sintaks.akhiri(ini.parameter);
     else if(ini.perintah=="fungsi")bindo.sintaks.fungsi(ini.parameter);
@@ -174,11 +174,11 @@ bindo.sistem.dapatkan=konten=>{
   },''),tipe:ketemuString?'string':'angka'}
 }
 
-bindo.sistem.validasiNama=namaVariabel=>{
-  if(/[!@#$%^&*()+\-=\[\]{};':"\\|,.<>\/?]/.test(namaVariabel.isi))bindo.sistem.error("Nama variabel, fungsi, ataupun parameter tidak boleh mengandung simbol");
-  if(namaVariabel.tipe=="string")bindo.sistem.error("Nama variabel, fungsi, ataupun parameter tidak boleh string");
-  if(namaVariabel.tipe=="angka")bindo.sistem.error("Nama variabel, fungsi, ataupun parameter tidak boleh angka");
-  return namaVariabel.isi;
+bindo.sistem.validasiNama=nama=>{
+  if(/[!@#$%^&*()+\-=\[\]{};':"\\|,.<>\/?]/.test(nama.isi))bindo.sistem.error("Nama variabel, fungsi, ataupun parameter tidak boleh mengandung simbol");
+  if(nama.tipe=="string")bindo.sistem.error("Nama variabel, fungsi, ataupun parameter tidak boleh string");
+  if(nama.tipe=="angka")bindo.sistem.error("Nama variabel, fungsi, ataupun parameter tidak boleh angka");
+  return nama.isi;
 }
 
 // ####Sintaks####
@@ -245,25 +245,28 @@ bindo.sintaks.jika=(parameter,tipe="jika")=>{
   else{bindo.sistem.error('Pernyataan "'+pernyataan+'" bukanlah pernyataan yang tepat untuk membandingkan dua variabel')}
   }
   
+  
   if(tipe=='jika'){
        bindo.proses.dataPercabangan[bindo.proses.dataPercabangan.length-1].nilai=hasil;
+       bindo.proses.dataPercabangan[bindo.proses.dataPercabangan.length-1].berakhir=false;
   }
   else if(tipe=='atau-jika'){
-       if(bindo.proses.dataPercabangan[bindo.proses.dataPercabangan.length-1].pernahBenar)bindo.proses.dataPercabangan[bindo.proses.dataPercabangan.length-1].nilai=false;
-       else{bindo.proses.dataPercabangan[bindo.proses.dataPercabangan.length-1].nilai=hasil};
+       bindo.proses.dataPercabangan[bindo.proses.dataPercabangan.length-1].nilai=(bindo.proses.dataPercabangan[bindo.proses.dataPercabangan.length-1].pernahBenar)?false:hasil;
   }
   else{
-       if(!bindo.proses.dataPercabangan[bindo.proses.dataPercabangan.length-1].pernahBenar)bindo.proses.dataPercabangan[bindo.proses.dataPercabangan.length-1].nilai=true;
-       else{bindo.proses.dataPercabangan[bindo.proses.dataPercabangan.length-1].nilai=false}
+       bindo.proses.dataPercabangan[bindo.proses.dataPercabangan.length-1].nilai=(!bindo.proses.dataPercabangan[bindo.proses.dataPercabangan.length-1].pernahBenar)?true:false;
+       bindo.proses.dataPercabangan[bindo.proses.dataPercabangan.length-1].berakhir=true;
   }
   
   if(hasil)bindo.proses.dataPercabangan[bindo.proses.dataPercabangan.length-1].pernahBenar=true;
+  if(bindo.proses.dataPercabangan[bindo.proses.dataPercabangan.length-2] && bindo.proses.dataPercabangan[bindo.proses.dataPercabangan.length-2].nilai==false)bindo.proses.dataPercabangan[bindo.proses.dataPercabangan.length-1].nilai=false;
   bindo.proses.dataPercabangan[bindo.proses.dataPercabangan.length-1].jumlahCabang++;
-  bindo.proses.dataPercabangan.push({nilai:true,jumlahCabang:0,pernahBenar:false});
+  bindo.proses.dataPercabangan.push({nilai:true,jumlahCabang:0,pernahBenar:false,berakhir:false});
 }
 
 bindo.sintaks.atauJika=parameter=>{
-     if(bindo.proses.dataPercabangan[bindo.proses.dataPercabangan.length-1].jumlahCabang<=0)bindo.sistem.error('Tidak bisa menggunakan perintah "atau-jika" karena tidak ada perintah "jika" sebelumnya')
+     if(bindo.proses.dataPercabangan[bindo.proses.dataPercabangan.length-1].jumlahCabang<=0)bindo.sistem.error('Tidak bisa menggunakan perintah "atau-jika" karena tidak ada perintah "jika" sebelumnya');
+     if(bindo.proses.dataPercabangan[bindo.proses.dataPercabangan.length-1].berakhir)bindo.sistem.error('Tidak bisa menggunakan perintah "atau-jika" setelah "selain-itu"');
      bindo.sintaks.jika(parameter,'atau-jika');
 }
 
@@ -278,9 +281,8 @@ bindo.sintaks.akhiri=parameter=>{
   }
   if(parameter[0].isi.toLowerCase()=="jika"){
     if(!bindo.proses.dalamFungsi){
-      if(bindo.proses.dataPercabangan.length<=0)bindo.sistem.error('Tidak bisa mengakhiri perintah "jika" karena tidak ada perintah tersebut yang sedang berjalan');
+      if(bindo.proses.dataPercabangan.length==1)bindo.sistem.error('Tidak bisa mengakhiri perintah "jika" karena tidak ada perintah tersebut yang sedang berjalan');
       bindo.proses.dataPercabangan.pop();
-      if(!bindo.proses.dataPercabangan.length)bindo.sistem.error('Terdapat perintah "akhiri jika" yang berlebih')
       bindo.proses.dataPercabangan[bindo.proses.dataPercabangan.length-1].nilai=true;
     }
   }
