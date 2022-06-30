@@ -20,12 +20,28 @@ Untuk saat ini Bindo masih berada di versi awal sehingga hanya memiliki sedikit 
 Untuk mencoba Bindo secara online, kamu bisa kunjungi https://muraft.github.io/bindo
 
 # Instalasi interpreter
+Untuk output di console
 ```javascript
 <textarea id="kode"></textarea>
 <br>
 <button onclick="jalankan()">Jalankan</button>
 <script src="https://cdn.jsdelivr.net/gh/muraft/bindo/bindoInterpreter.min.js"></script>
 <script>
+     function jalankan(){
+          bindo.jalankan(document.getElementById('kode').value)
+     }
+</script>
+```
+Untuk output di elemen html
+```javascript
+<textarea id="kode"></textarea>
+<br>
+<button onclick="jalankan()">Jalankan</button>
+<div id="output"></div>
+<script src="https://cdn.jsdelivr.net/gh/muraft/bindo/bindoInterpreter.min.js"></script>
+<script>
+     bindo.console = false;
+     bindo.output = document.getElementById("output);
      function jalankan(){
           bindo.jalankan(document.getElementById('kode').value)
      }
