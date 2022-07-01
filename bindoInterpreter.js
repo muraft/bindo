@@ -281,9 +281,8 @@ bindo.sintaks.akhiri=parameter=>{
   }
   if(parameter[0].isi.toLowerCase()=="jika"){
     if(!bindo.proses.dalamFungsi){
-      if(bindo.proses.dataPercabangan.length==1)bindo.sistem.error('Tidak bisa mengakhiri perintah "jika" karena tidak ada perintah tersebut yang sedang berjalan');
+      if(bindo.proses.dataPercabangan.length<=1)bindo.sistem.error('Tidak bisa mengakhiri perintah "jika" karena tidak ada perintah tersebut yang sedang berjalan');
       bindo.proses.dataPercabangan.pop();
-      bindo.proses.dataPercabangan[bindo.proses.dataPercabangan.length-1].nilai=true;
     }
   }
   else if(parameter[0].isi.toLowerCase()=="fungsi"){
@@ -291,6 +290,7 @@ bindo.sintaks.akhiri=parameter=>{
       bindo.proses.indexBaris=bindo.proses.checkpoint[bindo.proses.checkpoint.length-1];
       bindo.proses.checkpoint.pop();
       bindo.proses.fungsiBerjalan.pop();
+      bindo.proses.dataPercabangan.pop();
     }
     else{
       if(!bindo.proses.dalamFungsi)bindo.sistem.error('Tidak bisa mengakhiri perintah "fungsi" karena tidak ada fungsi yang sedang dideklarasi');
@@ -338,5 +338,6 @@ bindo.sintaks.jalankan=parameter=>{
   
   bindo.proses.fungsiBerjalan.push(fungsi);
   bindo.proses.checkpoint.push(bindo.proses.indexBaris);
+  bindo.proses.dataPercabangan.push({nilai:true,jumlahCabang:0,pernahBenar:false,berakhir:false});
   bindo.proses.indexBaris=fungsi.indexAwal;
 }
