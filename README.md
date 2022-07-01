@@ -38,10 +38,10 @@ Untuk output di elemen html
 <br>
 <button onclick="jalankan()">Jalankan</button>
 <div id="output"></div>
-<script src="https://cdn.jsdelivr.net/gh/muraft/bindo/bindoInterpreter.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/muraft/bindo/bindoCompiler.min.js"></script>
 <script>
-     bindo.console = false;
-     bindo.output = document.getElementById("output);
+     bindo.konsol = false;
+     bindo.output = document.getElementById('output');
      function jalankan(){
           bindo.jalankan(document.getElementById('kode').value)
      }
