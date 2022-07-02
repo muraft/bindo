@@ -12,6 +12,7 @@ bindo.init=()=>{
     dataPercabangan:[{nilai:true,jumlahCabang:0,pernahBenar:false,berakhir:false}],
     dalamFungsi:null,
     fungsiBerjalan:[],
+    perulanganBerjalan:[],
     checkpoint:[]
   };
 };
@@ -91,7 +92,7 @@ bindo.sistem.bongkar=baris=>{
       });
     }
     else if(hasil[i].isi.endsWith('&')){
-      hasilFinal[hasilFinal.length].push([]);
+      hasilFinal.push([]);
       hasil[i].isi.split('&').forEach(w=>{
         if(w.trim().length){
           hasilFinal[hasilFinal.length-1].push({isi:w,tipe:hasil[i].tipe});
@@ -306,6 +307,9 @@ bindo.sintaks.akhiri=parameter=>{
       bindo.proses.dalamFungsi=null;
     }
   }
+  else if(parameter[0].isi.toLowerCase()=="perulangan"){
+  	if(!bindo.proses.dataPerulangan)bindo.sistem.error('Tidak bisa mengakhiri perulangan karena tidak ada perulangan yang sedang berjalan');
+  }
   else{bindo.sistem.error('"'+parameter[0].isi+'" bukanlah sesuatu yang bisa diakhiri')}
 }
 
@@ -335,7 +339,7 @@ bindo.sintaks.jalankan=parameter=>{
   if(!bindo.fungsi.has(parameter[0].isi))bindo.sistem.error('Tidak ada fungsi yang bernama "'+parameter[0].isi+'"');
   let fungsi = bindo.fungsi.get(parameter[0].isi);
   if(parameter.length>1){
-    if(parameter[1].isi!='dengan')bindo.sistem.error('Paramater kedua harus bertuliskan "dengan"')
+    if(parameter[1].isi!='dengan')bindo.sistem.error('Paramater kedua harus bertuliskan "dengan"');
     parameter.slice(2).forEach((v,i)=>{
       fungsi.argumen.set(Array.from(fungsi.argumen.keys())[i],bindo.sistem.dapatkan(v))
     });
@@ -348,5 +352,18 @@ bindo.sintaks.jalankan=parameter=>{
 }
 
 bindo.sintaks.ulangi=parameter=>{
-     
+  if(parameter.length<5){
+    bindo.sistem.error("Perintah ini minimal membutuhkan 5 parameter.")
+  }
+  
+  let namaVariabel=bindo.sistem.validasiNama(parameter[0]);
+  if(parameter[1].isi.toLowerCase()!='dari')bindo.sistem.error('Parameter kedua harus bertuliskan "dari"');
+  let awal=bindo.sistem.dapatkan(parameter[2]);
+  if(mulai.tipe!='angka')bindo.sistem.error('Bilangan awal perulangan harus bertipe angka');
+  if(parameter[3].isi.toLowerCase()!='sampai')bindo.sistem.error('Parameter kedua harus bertuliskan "dari"');
+  let akhir=bindo.sistem.dapatkan(parameter[4]);
+  if(mulai.tipe!='angka')bindo.sistem.error('Bilangan akhir perulangan harus bertipe angka');
+  if(awal<akhir){
+  	bindo.proses.perulanganBerjalan.push({namaVariabel,awal,akhir,index:bindo.proses.indexBaris});
+  }
 }
