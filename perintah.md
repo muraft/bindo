@@ -40,7 +40,6 @@ jika (string | angka) (sama-dengan | lebih-dari | kurang-dari | berbeda-dengan) 
 //kode...
 akhiri jika
 ```
-- Alias: kalau
 - Berfungsi untuk membandingkan dua string ataupun angka, jika pernyataan perbandingan benar, maka akan menjalankan sekumpulan kode di bawahnya
 - Perlu diakhiri
 - Membutuhkan 3 parameter:

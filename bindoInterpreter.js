@@ -38,6 +38,7 @@ bindo.jalankan=kode=>{
     else if(ini.perintah=="akhiri")bindo.sintaks.akhiri(ini.parameter);
     else if(ini.perintah=="fungsi")bindo.sintaks.fungsi(ini.parameter);
     else if(ini.perintah=="jalankan")bindo.sintaks.jalankan(ini.parameter);
+    else if(ini.perintah=="ulangi")bindo.sintaks.ulangi(ini.parameter);
     else{bindo.sistem.error('Perintah "'+ini.perintah+'" tidak tersedia dalam bahasa pemrograman ini.')}
   }
   let sukses='Proses menjalankan berhasil ('+(performance.now()-waktuMulai)+' ms)';
@@ -99,7 +100,7 @@ bindo.sistem.bongkar=baris=>{
       gabung=true;
     }
     else{
-      hasilFinal[hasilFinal.length].push([]);
+      hasilFinal.push([]);
       hasil[i].isi.split('&').forEach(w=>{
         hasilFinal[hasilFinal.length-1].push({isi:w,tipe:hasil[i].tipe});
       });
@@ -136,10 +137,14 @@ bindo.sistem.tampilkan=kalimat=>{
 };
 
 bindo.sistem.dapatkan=konten=>{
+  console.log(konten)
   if(!Array.isArray(konten))konten=[konten];
   let ketemuString=false;
   return {isi:konten.reduce((a,b,i)=>{
-    if(b.tipe=='keyword' && /\d/.test(b.isi) && /[\+\-\*\/.()]/.test(b.isi) && !/[!@#$%^&_=\[\]{};':"\\|,<>?$]/.test(b.isi))b.tipe='angka';
+    if(b.tipe=='keyword' && /\d/.test(b.isi) && !/[A-Za-z!@#$%^&_=\[\]{};':"\\|,<>?$]/.test(b.isi)){
+         b.tipe='angka';
+    }
+    
     if(b.tipe=='angka'){
       let isi;
       b.isi.split(/[\+\-\*\/()]/).forEach(v=>{
@@ -340,4 +345,8 @@ bindo.sintaks.jalankan=parameter=>{
   bindo.proses.checkpoint.push(bindo.proses.indexBaris);
   bindo.proses.dataPercabangan.push({nilai:true,jumlahCabang:0,pernahBenar:false,berakhir:false});
   bindo.proses.indexBaris=fungsi.indexAwal;
+}
+
+bindo.sintaks.ulangi=parameter=>{
+     
 }
