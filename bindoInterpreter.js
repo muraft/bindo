@@ -169,6 +169,7 @@ bindo.sistem.dapatkan=konten=>{
           if(c)return a+c.isi;
         }
       }
+      if(bindo.proses.perulanganBerjalan[bindo.proses.perulanganBerjalan.length-1])return a+bindo.proses.perulanganBerjalan[bindo.proses.perulanganBerjalan.length-1].kondisi[0].isi;
       if(!bindo.variabel.has(b.isi))bindo.sistem.error('Tidak ada variabel yang bernama "'+b.isi+'"');
       let c=bindo.variabel.get(b.isi);
       if(c.tipe=='string')ketemuString=true;
@@ -244,11 +245,22 @@ bindo.sintaks.jika=(parameter,tipe="jika")=>{
     if(parseFloat(variabel1.isi)<parseFloat(variabel2.isi))hasil=true;
     else{hasil=false}
   }
+  else if(pernyataan=="lebih-dari-sd" || pernyataan==">="){
+    if(variabel1.tipe!="angka" || variabel2.tipe!="angka")bindo.sistem.error("Tidak bisa menggunakan tanda lebih dari atau sama dengan karena variabel yang dibandingkan bukanlah angka");
+    if(parseFloat(variabel1.isi)>=parseFloat(variabel2.isi))hasil=true;
+    else{hasil=false}
+  }
+  else if(pernyataan=="kurang-dari-sd" || pernyataan=="<="){
+    if(variabel1.tipe!="angka" || variabel2.tipe!="angka")bindo.sistem.error("Tidak bisa menggunakan tanda kurang dari atau sama dengan karena variabel yang dibandingkan bukanlah angka");
+    if(parseFloat(variabel1.isi)<=parseFloat(variabel2.isi))hasil=true;
+    else{hasil=false}
+  }
   else if(pernyataan=="berbeda-dengan" || pernyataan=="!=" || pernyataan=="bukan"){
     if(variabel1.isi!==variabel2.isi)hasil=true;
     else{hasil=false}
   }
   else{bindo.sistem.error('Pernyataan "'+pernyataan+'" bukanlah pernyataan yang tepat untuk membandingkan dua variabel')}
+  if(tipe=='perulangan')return hasil;
   }
   
   
@@ -308,7 +320,12 @@ bindo.sintaks.akhiri=parameter=>{
     }
   }
   else if(parameter[0].isi.toLowerCase()=="perulangan"){
-  	if(!bindo.proses.dataPerulangan)bindo.sistem.error('Tidak bisa mengakhiri perulangan karena tidak ada perulangan yang sedang berjalan');
+  	if(!bindo.proses.perulanganBerjalan)bindo.sistem.error('Tidak bisa mengakhiri perulangan karena tidak ada perulangan yang sedang berjalan');
+  	if(bindo.proses.perulanganBerjalan[bindo.proses.perulanganBerjalan.length-1].tipe=='for')bindo.proses.perulanganBerjalan[bindo.proses.perulanganBerjalan.length-1].kondisi[0].isi=(parseFloat(bindo.proses.perulanganBerjalan[bindo.proses.perulanganBerjalan.length-1].kondisi[0].isi)+1).toString();
+  	if(bindo.sintaks.jika(bindo.proses.perulanganBerjalan[bindo.proses.perulanganBerjalan.length-1].kondisi,'perulangan')){
+  		bindo.proses.indexBaris=bindo.proses.perulanganBerjalan[bindo.proses.perulanganBerjalan.length-1].index;
+  	}
+  	else{bindo.proses.perulanganBerjalan.pop()}
   }
   else{bindo.sistem.error('"'+parameter[0].isi+'" bukanlah sesuatu yang bisa diakhiri')}
 }
@@ -359,11 +376,20 @@ bindo.sintaks.ulangi=parameter=>{
   let namaVariabel=bindo.sistem.validasiNama(parameter[0]);
   if(parameter[1].isi.toLowerCase()!='dari')bindo.sistem.error('Parameter kedua harus bertuliskan "dari"');
   let awal=bindo.sistem.dapatkan(parameter[2]);
-  if(mulai.tipe!='angka')bindo.sistem.error('Bilangan awal perulangan harus bertipe angka');
+  if(awal.tipe!='angka')bindo.sistem.error('Bilangan awal perulangan harus bertipe angka');
   if(parameter[3].isi.toLowerCase()!='sampai')bindo.sistem.error('Parameter kedua harus bertuliskan "dari"');
   let akhir=bindo.sistem.dapatkan(parameter[4]);
-  if(mulai.tipe!='angka')bindo.sistem.error('Bilangan akhir perulangan harus bertipe angka');
-  if(awal<akhir){
-  	bindo.proses.perulanganBerjalan.push({namaVariabel,awal,akhir,index:bindo.proses.indexBaris});
-  }
+  if(akhir.tipe!='angka')bindo.sistem.error('Bilangan akhir perulangan harus bertipe angka');
+  let data={namaVariabel,index:bindo.proses.indexBaris,kondisi:[
+  		awal,
+  		{
+  			isi:'<=',
+  			tipe:'keyword'
+  		},
+  		akhir
+  	],tipe:'for'};
+  if(awal<=akhir){
+  	data.berjalan=true;
+  }else{data.berjalan=false}
+  bindo.proses.perulanganBerjalan.push(data);
 }
