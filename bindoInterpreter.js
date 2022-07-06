@@ -138,7 +138,6 @@ bindo.sistem.tampilkan=kalimat=>{
 };
 
 bindo.sistem.dapatkan=konten=>{
-  console.log(konten)
   if(!Array.isArray(konten))konten=[konten];
   let ketemuString=false;
   return {isi:konten.reduce((a,b,i)=>{
@@ -321,7 +320,7 @@ bindo.sintaks.akhiri=parameter=>{
   }
   else if(parameter[0].isi.toLowerCase()=="perulangan"){
   	if(!bindo.proses.perulanganBerjalan)bindo.sistem.error('Tidak bisa mengakhiri perulangan karena tidak ada perulangan yang sedang berjalan');
-  	if(bindo.proses.perulanganBerjalan[bindo.proses.perulanganBerjalan.length-1].tipe=='for')bindo.proses.perulanganBerjalan[bindo.proses.perulanganBerjalan.length-1].kondisi[0].isi=(parseFloat(bindo.proses.perulanganBerjalan[bindo.proses.perulanganBerjalan.length-1].kondisi[0].isi)+1).toString();
+  	if(bindo.proses.perulanganBerjalan[bindo.proses.perulanganBerjalan.length-1].tipe=='for')bindo.proses.perulanganBerjalan[bindo.proses.perulanganBerjalan.length-1].kondisi[0].isi=bindo.sistem.dapatkan({isi:bindo.proses.perulanganBerjalan[bindo.proses.perulanganBerjalan.length-1].perubahan,tipe:'angka'}).isi;
   	if(bindo.sintaks.jika(bindo.proses.perulanganBerjalan[bindo.proses.perulanganBerjalan.length-1].kondisi,'perulangan')){
   		bindo.proses.indexBaris=bindo.proses.perulanganBerjalan[bindo.proses.perulanganBerjalan.length-1].index;
   	}
@@ -380,16 +379,14 @@ bindo.sintaks.ulangi=parameter=>{
   if(parameter[3].isi.toLowerCase()!='sampai')bindo.sistem.error('Parameter kedua harus bertuliskan "dari"');
   let akhir=bindo.sistem.dapatkan(parameter[4]);
   if(akhir.tipe!='angka')bindo.sistem.error('Bilangan akhir perulangan harus bertipe angka');
+  let lambang=parseInt(awal.isi)<=parseInt(akhir.isi)?'<=':'>=';
   let data={namaVariabel,index:bindo.proses.indexBaris,kondisi:[
   		awal,
   		{
-  			isi:'<=',
+  			isi:lambang,
   			tipe:'keyword'
   		},
   		akhir
-  	],tipe:'for'};
-  if(awal<=akhir){
-  	data.berjalan=true;
-  }else{data.berjalan=false}
+  	],tipe:'for',perubahan:parameter[5]?parameter[5].isi:lambang=='<='?'i+1':'i-1'};
   bindo.proses.perulanganBerjalan.push(data);
 }
