@@ -168,7 +168,7 @@ bindo.sistem.dapatkan=konten=>{
           if(c)return a+c.isi;
         }
       }
-      if(bindo.proses.perulanganBerjalan[bindo.proses.perulanganBerjalan.length-1])return a+bindo.proses.perulanganBerjalan[bindo.proses.perulanganBerjalan.length-1].kondisi[0].isi;
+      if(bindo.proses.perulanganBerjalan[bindo.proses.perulanganBerjalan.length-1] && b.isi==bindo.proses.perulanganBerjalan[bindo.proses.perulanganBerjalan.length-1].namaVariabel)return a+bindo.proses.perulanganBerjalan[bindo.proses.perulanganBerjalan.length-1].kondisi[0].isi;
       if(!bindo.variabel.has(b.isi))bindo.sistem.error('Tidak ada variabel yang bernama "'+b.isi+'"');
       let c=bindo.variabel.get(b.isi);
       if(c.tipe=='string')ketemuString=true;
