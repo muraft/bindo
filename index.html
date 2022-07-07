@@ -22,12 +22,12 @@
   </head>
   <body style="font-family: 'VT323', monospace;">
     <nav class="navbar navbar-light bg-light p-2">
-      <div class="navbar-brand" href="#">
-        <img src="logo.jpg" width="80" height="45" class="d-inline-block align-top rounded border border-danger" alt="logo bindo">
-        <span class="display-2 text-danger" style="font-family: 'Comic Neue', cursive;">
+      <div class="navbar-brand d-flex align-items-center" href="#">
+        <img src="logo.jpg" width="60" height="45" class="d-inline-block align-top rounded border border-danger" alt="logo bindo">
+        <span class="display-4 text-danger" style="font-family: 'Comic Neue', cursive;">
           <strong>Bindo 1.0</strong>
         </span>
-        By <a href="http://muraft.great-site.net" class="text-danger">MuRafT</a>
+        <font class="align-self-end" style="font-size:1rem !important;">By <a target="_blank" href="http://muraft.github.io" class="text-danger">MuRafT</a></font>
       </div>
     </nav>
     <div class="container-fluid">
@@ -45,14 +45,15 @@
         </div>
       </div>
     </div>
-    
+
     <script src="bindoInterpreter.js"></script>
     <script>
     bindo.konsol=false;
     bindo.output=document.getElementById("output");
-      document.getElementById("tombolCompile").onclick=()=>{
-        bindo.jalankan(document.getElementById("kode").value);
-      }
+    document.getElementById("tombolCompile").onclick=()=>{
+      bindo.jalankan(document.getElementById("kode").value);
+      document.getElementById("output").scrollTop = document.getElementById("output").scrollHeight;
+    }
     </script>
   </body>
 </html>
