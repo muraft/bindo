@@ -30,6 +30,7 @@ bindo.jalankan=kode=>{
     let ini = bindo.sistem.bongkar(isiBaris);
     if(bindo.proses.dalamFungsi && ini.perintah!="akhiri")continue;
     if(bindo.proses.dataPercabangan[bindo.proses.dataPercabangan.length-2] && !bindo.proses.dataPercabangan[bindo.proses.dataPercabangan.length-2].nilai && ini.perintah!="akhiri" && ini.perintah!="jika")continue;
+    if(bindo.proses.perulanganBerjalan[bindo.proses.perulanganBerjalan.length-1] && !bindo.proses.perulanganBerjalan[bindo.proses.perulanganBerjalan.length-1].berjalan && ini.perintah!="akhiri" && ini.perintah!="ulangi")continue;
 
     if(ini.perintah=="ingat")bindo.sintaks.ingat(ini.parameter);
     else if(ini.perintah=="tulis" || ini.perintah=="tampilkan")bindo.sintaks.tulis(ini.parameter);
@@ -168,9 +169,11 @@ bindo.sistem.dapatkan=konten=>{
           if(c)return a+c.isi;
         }
       }
-      if(bindo.proses.perulanganBerjalan[bindo.proses.perulanganBerjalan.length-1] &&
-        bindo.proses.perulanganBerjalan[bindo.proses.perulanganBerjalan.length-1].tipe=='untuk' &&
-        b.isi==bindo.proses.perulanganBerjalan[bindo.proses.perulanganBerjalan.length-1].namaVariabel)return a+bindo.proses.perulanganBerjalan[bindo.proses.perulanganBerjalan.length-1].kondisi[0].isi;
+      if(bindo.proses.perulanganBerjalan.length){
+      	for(let i=0;i<bindo.proses.perulanganBerjalan.length;i++){
+      		if(bindo.proses.perulanganBerjalan[i].tipe=='untuk' && bindo.proses.perulanganBerjalan[i].namaVariabel==b.isi)return a+bindo.proses.perulanganBerjalan[i].kondisi[0].isi;
+      	}
+      }
 
       if(!bindo.variabel.has(b.isi))bindo.sistem.error('Tidak ada variabel yang bernama "'+b.isi+'"');
       let c=bindo.variabel.get(b.isi);
@@ -233,7 +236,7 @@ bindo.sintaks.jika=(parameter,tipe="jika")=>{
   let variabel2=bindo.sistem.dapatkan(parameter[2]);
 
   let pernyataan=parameter[1].isi.toLowerCase();
-  if(pernyataan=="sama-dengan" || pernyataan=="=" || pernyataan=="==" || pernyataan=="adalah"){
+  if(pernyataan=="sama-dengan" || pernyataan=="==" || pernyataan=="adalah"){
     if(variabel1.isi===variabel2.isi)hasil=true;
     else{hasil=false}
   }
@@ -322,7 +325,7 @@ bindo.sintaks.akhiri=parameter=>{
     }
   }
   else if(parameter[0].isi.toLowerCase()=="perulangan"){
-  	if(!bindo.proses.perulanganBerjalan)bindo.sistem.error('Tidak bisa mengakhiri perulangan karena tidak ada perulangan yang sedang berjalan');
+  	if(!bindo.proses.perulanganBerjalan.length)bindo.sistem.error('Tidak bisa mengakhiri perulangan karena tidak ada perulangan yang sedang berjalan');
     const checkpoint=bindo.proses.indexBaris;
     bindo.proses.indexBaris=bindo.proses.perulanganBerjalan[bindo.proses.perulanganBerjalan.length-1].index;
   	if(bindo.proses.perulanganBerjalan[bindo.proses.perulanganBerjalan.length-1].tipe=='untuk')bindo.proses.perulanganBerjalan[bindo.proses.perulanganBerjalan.length-1].kondisi[0].isi=bindo.sistem.dapatkan({isi:bindo.proses.perulanganBerjalan[bindo.proses.perulanganBerjalan.length-1].perubahan,tipe:'angka'}).isi;
@@ -384,7 +387,7 @@ bindo.sintaks.ulangi=parameter=>{
   let data={index:bindo.proses.indexBaris};
   if(parameter[0].isi.toLowerCase()=='untuk'){
     if(parameter.length<6){
-      bindo.sistem.error('Perulangan-untuk membutuhkan 5 parameter selanjutnya')
+      bindo.sistem.error('Perulangan "untuk" membutuhkan 5 parameter selanjutnya')
     }
     let namaVariabel=bindo.sistem.validasiNama(parameter[1]);
     if(parameter[2].isi.toLowerCase()!='dari')bindo.sistem.error('Parameter kedua perulangan-untuk harus bertuliskan "dari"');
@@ -396,13 +399,22 @@ bindo.sintaks.ulangi=parameter=>{
     let lambang=parseInt(awal.isi)<=parseInt(akhir.isi)?'<=':'>=';
     Object.assign(data,{
       tipe:'untuk',
-      namaVariabel:namaVariabel,
+      namaVariabel,
       kondisi:[awal,{isi:lambang,tipe:'keyword'},akhir],
-      perubahan:parameter[6]?parameter[6].isi:lambang=='<='?'i+1':'i-1'
+      perubahan:parameter[6]?parameter[6].isi:lambang=='<='?namaVariabel+'+1':namaVariabel+'-1',
+      berjalan:(!bindo.proses.perulanganBerjalan[bindo.proses.perulanganBerjalan.length-1] || bindo.proses.perulanganBerjalan[bindo.proses.perulanganBerjalan.length-1] && bindo.proses.perulanganBerjalan[bindo.proses.perulanganBerjalan.length-1].berjalan)
     });
   }
   else if(parameter[0].isi.toLowerCase()=='jika'){
-
+  	if(parameter.length<4){
+      bindo.sistem.error('Perulangan "jika" membutuhkan 3 parameter selanjutnya')
+    }
+  	const kondisi = parameter.slice(1,4);
+  	Object.assign(data,{
+      tipe:'jika',
+      kondisi:kondisi,
+      berjalan:(bindo.proses.perulanganBerjalan[bindo.proses.perulanganBerjalan.length-1] && !bindo.proses.perulanganBerjalan[bindo.proses.perulanganBerjalan.length-1].berjalan)?false:bindo.sintaks.jika(kondisi,'perulangan')
+    });
   }
   else{bindo.sistem.error(parameter[0].isi+' bukanlah tipe perulangan yang tepat')}
   bindo.proses.dataPercabangan.push({nilai:true,jumlahCabang:0,pernahBenar:false,berakhir:false});
