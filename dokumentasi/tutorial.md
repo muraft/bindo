@@ -157,7 +157,7 @@ Bilangan ganjil: 17
 Bilangan ganjil: 19
 ```
 Note: hitungMaju, hitungMundur, dan hitungan itu adalah nama variabel untuk menyimpan perhitungan loop (i)
-### Perulangan jika
+### 2. Perulangan jika (while loop)
 ```
 ingat angka adalah 0
 
