@@ -29,8 +29,8 @@ bindo.jalankan=kode=>{
     if(isiBaris.trim()=='' || isiBaris.startsWith("//"))continue;
     let ini = bindo.sistem.bongkar(isiBaris);
     if(bindo.proses.dalamFungsi && ini.perintah!="tutup")continue;
-    if(bindo.proses.dataPercabangan[bindo.proses.dataPercabangan.length-2] && !bindo.proses.dataPercabangan[bindo.proses.dataPercabangan.length-2].nilai && ini.perintah!="tutup" && ini.perintah!="jika")continue;
-    if(bindo.proses.perulanganBerjalan[bindo.proses.perulanganBerjalan.length-1] && !bindo.proses.perulanganBerjalan[bindo.proses.perulanganBerjalan.length-1].berjalan && ini.perintah!="tutup" && ini.perintah!="ulangi")continue;
+    if(bindo.proses.dataPercabangan[bindo.proses.dataPercabangan.length-2] && !bindo.proses.dataPercabangan[bindo.proses.dataPercabangan.length-2].nilai && ini.perintah!="tutup" && ini.perintah!="cabang")continue;
+    if(bindo.proses.perulanganBerjalan[bindo.proses.perulanganBerjalan.length-1] && !bindo.proses.perulanganBerjalan[bindo.proses.perulanganBerjalan.length-1].berjalan && ini.perintah!="tutup" && ini.perintah!="perulangan")continue;
 
     if(ini.perintah=="ingat")bindo.sintaks.ingat(ini.parameter);
     else if(ini.perintah=="tulis" || ini.perintah=="tampilkan")bindo.sintaks.tulis(ini.parameter);
@@ -304,7 +304,7 @@ bindo.sintaks.tutup=parameter=>{
   if(parameter.length<1){
     bindo.sistem.error("Perintah ini membutuhkan 1 parameter.")
   }
-  if(parameter[0].isi.toLowerCase()=="jika"){
+  if(parameter[0].isi.toLowerCase()=="cabang"){
     if(!bindo.proses.dalamFungsi){
       if(bindo.proses.dataPercabangan.length<=1)bindo.sistem.error('Tidak bisa menutup perintah "jika" karena tidak ada perintah tersebut yang sedang berjalan');
       bindo.proses.dataPercabangan.pop();
@@ -326,7 +326,7 @@ bindo.sintaks.tutup=parameter=>{
       bindo.proses.dalamFungsi=null;
     }
   }
-  else if(parameter[0].isi.toLowerCase()=="ulangi"){
+  else if(parameter[0].isi.toLowerCase()=="perulangan"){
   	if(!bindo.proses.perulanganBerjalan.length)bindo.sistem.error('Tidak bisa menutup perintah "ulangi" karena tidak ada perulangan yang sedang berjalan');
     const checkpoint=bindo.proses.indexBaris;
     bindo.proses.indexBaris=bindo.proses.perulanganBerjalan[bindo.proses.perulanganBerjalan.length-1].index;

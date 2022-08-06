@@ -29,7 +29,7 @@ ingat namaVariabel (adalah | pasti) (string | angka)
 
 ## Tulis
 ```
-tulis (string | angka) !info
+tulis (string | angka) !mode
 ```
 - Alias: tampilkan
 - Berfungsi untuk menampilkan data ke tempat output
@@ -47,7 +47,7 @@ tulis (string | angka) !info
 ```
 jika (string | angka) (sama-dengan | lebih-dari | kurang-dari | lebih-dari-sama-dengan | kurang-dari-sama-dengan | berbeda-dengan) (string | angka)
 //kode...
-tutup  jika
+tutup  cabang
 ```
 - Berfungsi untuk membandingkan dua string ataupun angka, jika pernyataan perbandingan benar, maka akan menjalankan sekumpulan kode di bawahnya
 - Perlu ditutup 
@@ -114,12 +114,12 @@ tutup  jika
 
 ## Tutup
 ```
-tutup (jika | fungsi | ulangi)
+tutup (cabang | fungsi | perulangan)
 ```
-- Berfungsi untuk menutul perintah yang perlu ditutup, karena perintah tersebut mempengaruhi baris kode di bawahnya
+- Berfungsi untuk menutup perintah yang perlu ditutup, karena perintah tersebut mempengaruhi baris kode di bawahnya
 - Membutukan 1 parameter:
   ### 1. Nama perintah yang ingin ditutup
-  - Yaitu: jika, fungsi, dan ulangi
+  - Yaitu: cabang, fungsi, dan perulangan
 
 ## Fungsi
 ```
