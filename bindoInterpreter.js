@@ -222,7 +222,7 @@ bindo.sintaks.tulis=parameter=>{
   }
 
   let konten=bindo.sistem.dapatkan(parameter[0]);
-  if(parameter[1] && parameter[1].isi.toLowerCase()=="!info")bindo.sistem.tampilkan(`(${konten.tipe}): ${konten.isi}`)
+  if(parameter[1] && parameter[1].isi.toLowerCase()=="!tipe")bindo.sistem.tampilkan(`(${konten.tipe}): ${konten.isi}`)
   else {bindo.sistem.tampilkan(konten.isi)}
 }
 
@@ -250,12 +250,12 @@ bindo.sintaks.jika=(parameter,tipe="jika")=>{
     if(parseFloat(variabel1.isi)<parseFloat(variabel2.isi))hasil=true;
     else{hasil=false}
   }
-  else if(pernyataan=="lebih-dari-sd" || pernyataan==">="){
+  else if(pernyataan=="lebih-dari-sama-dengan" || pernyataan=="lebih-dari-smd" || pernyataan==">="){
     if(variabel1.tipe!="angka" || variabel2.tipe!="angka")bindo.sistem.error("Tidak bisa menggunakan tanda lebih dari atau sama dengan karena variabel yang dibandingkan bukanlah angka");
     if(parseFloat(variabel1.isi)>=parseFloat(variabel2.isi))hasil=true;
     else{hasil=false}
   }
-  else if(pernyataan=="kurang-dari-sd" || pernyataan=="<="){
+  else if(pernyataan=="kurang-dari-sama-dengan" || pernyataan=="kurang-dari-smd" || pernyataan=="<="){
     if(variabel1.tipe!="angka" || variabel2.tipe!="angka")bindo.sistem.error("Tidak bisa menggunakan tanda kurang dari atau sama dengan karena variabel yang dibandingkan bukanlah angka");
     if(parseFloat(variabel1.isi)<=parseFloat(variabel2.isi))hasil=true;
     else{hasil=false}
