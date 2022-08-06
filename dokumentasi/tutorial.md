@@ -1,328 +1,182 @@
-# Dasar
-## 1. Menampilkan kalimat
-Untuk menampilkan sebuah kalimat, kamu bisa dengan mudah mengetik perintah "tulis" kemudian disambung dengan kalimat yang ingin kamu tampilkan yang dikurung dengan tanda petik dua(") seperti contoh di bawah ini
-
+# Tutorial Dasar
+Note: cek juga [daftar perintah](perintah.md) untuk meningkatkan pemahaman
+## Komentar & Menampilkan kalimat
 ```
+//Menampilkan "Halo dunia!"
 tulis "Halo dunia!"
 ```
-
-Maka di layar output atau layar hasil akan tampil
-
+Hasil:
 ```
 Halo dunia!
 ```
+Note: Perintah bindo adalah case-insensitive
 
-## 2. Komentar
-Di setiap bahasa pemrograman ada yang namanya komentar, komentar adalah tulisan yang tidak dianggap sebagai perintah oleh sistem, contoh:
+## Variabel & Tipe Data
 ```
-//ini adalah komentar
-```
-Maka tidak akan menghasilkan apa apa
-```
-```
+//Variabel bisa diubah
+ingat bisaDiubah adalah "tes"
+ingat bisaDiubah adalah "cek"
 
-## 3. Menggunakan variabel
-Variabel bisa kita misalkan sebagai sebuah gelas yang diberi label nama, misalnya kita mengisi gelas dengan label nama "favorit", kemudian kita isi gelasnya dengan teh. Jika diubah ke dalam bahasa bindo, hasilnya akan seperti ini, yaitu dengan mengetik perintah "ingat", kemudian disambung dengan nama variabel, kemudian "adalah", kemudian isi variabel yang dikurung dengan tanda petik(")
+//Menggunakan pasti untuk membuat variabel konstan, tidak bisa diubah
+ingat takBisaDiubah pasti "tes"
 
+//tipe data
+ingat contohString adalah "Ini adalah string"
+ingat contohAngka adalah 123
+ingat contohAngkaDesimal adalah 1.23
 ```
-ingat favorit adalah "teh"
-```
+Note:
+- Nama variabel tidak boleh angka, tetapi kombinasi huruf dan angka diperbolehkan
+- Nama variabel tidak boleh mengandung simbol, kecuali garis bawah(_)
 
-Meskipun kode di atas tidak akan menampilkan apa apa, sebenarnya sistem bindo dapat diumpamakan mengisi "teh" ke gelas bernama "favorit". Jika kamu ingin menampilkan isi dari variabelnya, kamu bisa mengetik perintah "tulis" kemudian ketik nama variabelnya tanpa dikurung tanda petik (")
+## Operasi Hitung & Penggabungan String
+```
+//Operasi hitung
+ingat a adalah 2
+ingat b adalah 4
+tulis 2*(a+b-2)/2
 
-```
-ingat favorit adalah "teh"
-tulis favorit
-```
-
-maka hasilnya adalah
-
-```
-teh
-```
-
-Jika kamu ingin mengganti isi variabel, kamu bisa mengulang perintah serupa namun dengan isi yang berbeda
-
-```
-ingat favorit adalah "teh"
-ingat favorit adalah "kopi"
-tulis favorit
-```
-
-maka hasilnya adalah
-
-```
-kopi
-```
-
-Jika kamu ingin variabelmu bersifat konstan atau tidak bisa diubah, kamu bisa mengubah "adalah" menjadi "pasti"
-
-```
-ingat favorit pasti "teh"
-ingat favorit adalah "kopi"
-tulis favorit
-```
-
-maka hasilnya adalah
-
-```
-Terdapat kesalahan pada baris ke-3: Variabel favorit adalah konstan sehingga isinya tidak bisa diubah.
-```
-Informasi tambahan:
-- Nama variabel tidak boleh hanya berisi angka, tetapi kombinasi variabel dan angka diperbolehkan
-- Nama variabel tidak boleh mengandung simbol dan tanda baca, kecuali garis bawah(_)
-
-## 4. Apa bedanya pakai petik dua dan tidak?
-Kalimat tanpa tanda petik dua digunakan untuk menampilkan isi variabel. Contoh:
-```
+//Penggabungan string menggunakan simbol &
+ingat nama pasti "Rafie"
 ingat umur adalah 16
-tulis umur
+tulis "Halo nama saya "&nama&" dan umur saya " & umur & " tahun"
 ```
-maka kode di atas akan menampilkan isi dari umur
+Hasil:
 ```
-16
-```
-Sedangkan jika diberi tanda petik dua
-```
-ingat umur adalah 16
-tulis "umur"
-```
-maka kode di atas akan menampilkan tulisan "umur"
-```
-umur
-```
-## 5. Tipe data
-Di setiap bahasa pemrograman ada yang namanya tipe data. Dalam bahasa ini, hanya ada 2 tipe data:
-  ### 1. String (Kalimat)
-  String, atau kita dalam bahasa ini kita sebut saja sebagai kalimat, adalah tipe data yang berisi serangkaian huruf, angka, ataupun simbol. Contoh:
-  - "Halo"
-  - "12345"
-  - "Umur saya adalah 16 tahun"
-
-  Panjang string tidak menentu, panjangnya bisa dimulai dari 0, contoh:
-  - ""
-  - "a"
-
-  Keduanya termasuk string, yang terpenting diapit oleh tanda petik dua(")
-  
-  ### 2. Angka
-  Seperti namanya, tipe data angka pastinya berisi angka. Dalam bahasa ini, angka termasuk bilangan asli, negatif, maupun bilangan desimal. Contoh:
-  - 12345
-  - 0.3333
-  - -1.5
-  - 90
-
-  Di contoh atas, ada 12345, sedangkan di string juga ada "12345", tetapi apa perbedaan angka yang berjenis string dan yang bukan? Perbedaannya angka yang bertipe string tidak bisa dijumlahkan, seperti "10"+"10" itu tidak bisa dijumlahkan, sedangkan 10+10 akan menghasilkan 20. Contoh:
-  ```
-  tulis 10+10
-  ```
-  maka hasilnya:
-  ```
-  20
-  ```
-  tipe data angka bisa dioperasikan dengan operasi hitung lainnya yaitu pengurangan(-), perkalian(*), dan pembagian(/)
-## 6. Operasi hitung dan penggabungan string
-Kamu bisa melakukan operasi hitung pertambahan(+), pengurangan(-), perkalian(*), ataupun pembagian(/). Contohnya:
-```
-ingat a adalah 5
-ingat b adalah 2
-
-tulis a+b
-tulis a-b
-tulis a*b
-tulis a/b
-tulis (1+2)*2/2
-```
-maka akan menghasilkan
-```
-2
-7
-3
-10
-2.5
 4
+Halo nama saya Rafie dan umur saya 16 tahun
 ```
-namun kamu tidak bisa melakukan operasi hitung pada tipe data string, karena mereka dibaca sebagai kalimat, bukan angka. Contoh:
-```
-ingat a adalah "5"
-ingat b adalah "2"
+Note: Operasi hitung yang tersedia hanya pertambahan(+), pengurangan(-), perkalian(*), dan pembagian(/)
 
-tulis a+b
-```
-maka akan menghasilkan error:
-```
-Terdapat kesalahan pada baris ke-4: Tidak bisa melakukan operasi hitung karena variabel "a" bukan berisi angka
-```
-Jka kamu ingin mencoba menggabungkan string, gunakan simbol dan (&) seperti ini:
-```
-ingat nama adalah "Rafie"
-tulis "Halo nama saya " & nama & "!"
-```
-Maka akan menghasilkan:
-```
-Halo nama saya Rafie!
-```
-Jika kamu mencoba menggabungkan angka dengan penggabung string seperti ini:
-```
-ingat a adalah 5
-ingat b adalah 7
-
-tulis 5 & 7
-```
-maka akan menghasilkan
-```
-57
-```
-
-## 7. Percabangan
-Dilihat dari namanya, percabangan berarti membagi jalur kode kita menjadi beberapa cabang. Jika sebelumnya kita membuat kode dengan 1 jalur seperti ini:
-```
-ingat uang adalah 50000
-tulis uang
-```
-Sekarang bagaimana jika kita meningkatkan kode kita agar menjadi bercabang
+## Percabangan
 ```
 ingat uang adalah 5000
 
-jika uang lebih-dari 0
-tulis "kamu punya uang"
-akhiri jika
-```
-maka akan menghasilkan
-```
-kamu punya uang
-```
-Perintah "jika" digunakan untuk membandingkan 2 data, dalam contoh di atas kita mengecek apakah variabel uang lebih dari 0, dan jika lebih dari 0, maka tampilkan "kamu punya uang". Mari kita coba apa yang terjadi jika kita mengubah isi variabel uang menjadi 0
-```
-ingat uang adalah 0
+//if
+jika uang kurang-dari 5000
+tulis "Uang kamu tidak cukup untuk membeli minum"
+tutup cabang
 
-jika uang lebih-dari 0
-tulis "kamu punya uang"
-akhiri jika
-```
-Maka tidak akan tampil apa apa
-```
+//else if
+atau jika uang lebih-dari 5000
+tulis "Uang kamu lebih dari cukup untuk membeli minum"
+tutup cabang
 
+//else
+selain itu
+tulis "Uang kamu cukup untuk membeli minum"
+tutup cabang
 ```
-Sekarang kita tingkatkan lagi menjadi seperti ini
-```
-ingat uang adalah 5000
+Note:
+Perbandingan yang tersedia:
+1. sama-dengan
+2. berbeda-dengan
+3. lebih-dari
+4. kurang-dari
+5. lebih-dari-sama-dengan
+6. kurang-dari-sama-dengan
 
-jika uang lebih-dari 0
-tulis "kamu punya uang"
-akhiri jika
+## Fungsi
+```
+//Fungsi tanpa argumen
+fungsi haloDunia
+tulis "Halo dunia!"
+tutup fungsi
 
-jika uang lebih-dari 5000
-tulis "Kamu bisa membeli es teh manis"
-akhiri jika
-```
-maka hasilnya adalah
-```
-kamu punya uang 
-Kamu bisa membeli es teh manis
-```
-Jangan lupa untuk memberi perintah "akhiri jika" untuk mengakhiri kode yang dijalankan perintah "jika". Kemudian kamu bisa mengkreasikan kodemu menjadi bercabang cabang, bahkan kamu bisa menambahkan perintah jika di dalam perintah jika seperti ini
-```
-ingat uang adalah 5000
-ingat warung adalah "tutup"
+//fungsi dengan argumen
+fungsi luasPersegi perlu sisi
+tulis "Luas: " & sisi*sisi
+tutup fungsi
 
-jika uang lebih-dari 0
-tulis "kamu punya uang"
-akhiri jika
+fungsi luasPersegiPanjang perlu panjang lebar
+tulis "Luas: " & panjang*lebar
+tutup fungsi
 
-jika uang lebih-dari 5000
-  jika warung sama-dengan "buka"
-  tulis "Kamu bisa membeli es teh manis"
-  akhiri jika
+//Pemanggilan fungsi
+jalankan haloDunia
+jalankan luasPersegi dengan 5
+jalankan luasPersegiPanjang dengan 5 10
+```
+Hasil:
+```
+Halo dunia!
+Luas: 25
+Luas: 50
+```
+Note: Peraturan nama fungsi sama seperti peraturan nama variabel
 
-  jika warung sama-dengan "tutup"
-  tulis "Kamu punya cukup uang untuk beli es teh manis tapi warungnya tutup"
-  akhiri jika
-akhiri jika
+## Perulangan
+### 1. Perulangan untuk (for loop)
 ```
-Maka hasilnya adalah
-```
-kamu punya uang
-Kamu punya cukup uang untuk beli es teh manis tapi warungnya tutup
-```
-Pernyataan yang digunakan untuk membandingkan ada 4:
-1. sama-dengan : untuk mengecek apakah data pertama dan kedua sama persis
-2. berbeda-dengan : untuk mengecek apakah data pertama dan kedua berbeda
-3. lebih-dari : untuk mengecek apakah data pertama lebih beear daripada data kedua (Hanya berlaku untuk angka)
-4. kurang-dari : untuk mengecek apakah data pertama lebih kecil daripada data kedua (Hanya berlaku untuk angka)
+//Hitung maju
+ulangi untuk hitunganMaju dari 1 sampai 10 
+tulis hitunganMaju
+tutup perulangan
 
-## 8. Fungsi
-Misalnya kamu memiliki kode yang ingin kamu pakai berkali-kali seperti ini:
-```
-tulis "Halo semuanya! Selamat pagi! Semoga sehat selalu"
-tulis "Halo semuanya! Selamat pagi! Semoga sehat selalu"
-tulis "Halo semuanya! Selamat pagi! Semoga sehat selalu"
-tulis "Halo semuanya! Selamat pagi! Semoga sehat selalu"
-```
-pasti kamu akan melakukannya dengan mencopy paste kodenya berkali-kali, sebenarnya dalam dunia pemrograman, ada yang namanya fungsi.
-Fungsi itu tujuannya untuk menyimpan sekumpulan kode yang bisa dipakai berulang-ulang tanpa menyalin ulanh kodenya, contoh:
-```
-fungsi menyapa
-tulis "Halo semuanya! Selamat pagi! Semoga sehat selalu"
-akhiri fungsi
+//Hitung mundur
+ulangi untuk hitungMundur dari 10 sampai 1
+tulis hitungMundur
+tutup perulangan
 
-jalankan menyapa
-jalankan menyapa
-jalankan menyapa
-jalankan menyapa
+//Merubah kelipatan perhitungan
+ulangi untuk hitungan dari 1 sampai 20 hitungan+2
+tulis "Bilangan ganjil: " & hitungan
+tutup perulangan
 ```
-Kode yang pertama dan kedua akan menghasilkan hasil yang sama. Seperti yang kamu lihat di atas, kita bisa membuat fungsi dengan perintah "fungsi", kemudian diiringi dengan nama fungsi, setelah itu di baris selanjutkan diisi dengan kode yang ingin kamu simpan di dalam fungsinya, dan terakhir jangan lupa menutup fungsi dengan perintah "akhiri fungsi". Untuk menjalankannya, kamu tinggal menulis perintah "jalankan" kemudian diiringi dengan nama fungsi yang ingin dijalankan. Sekarang kita coba membuat fungsi yang lebih kompleks
-```
-ingat a adalah 0
-
-fungsi tambah
-ingat a adalah a+1
-tulis a
-akhiri fungsi
-
-jalankan tambah
-jalankan tambah
-jalankan tambah
-jalankan tambah
-jalankan tambah
-```
-Maka akan menghasilkan:
+Hasil:
 ```
 1
 2
 3
 4
 5
+6
+7
+8
+9
+10
+10
+9
+8
+7
+6
+5
+4
+3
+2
+1
+Bilangan ganjil: 1
+Bilangan ganjil: 3
+Bilangan ganjil: 5
+Bilangan ganjil: 7
+Bilangan ganjil: 9
+Bilangan ganjil: 11
+Bilangan ganjil: 13
+Bilangan ganjil: 15
+Bilangan ganjil: 17
+Bilangan ganjil: 19
 ```
-Di setiap bahasa pemrograman, ada yang namanya parameter fungsi, ia mirip seperti variabel, namun perbedaannya isi parameter bisa ditetapkan saat menjalankan fungsi, dan hanya berlaku di dalam fungsi. Mari kita langsung lihat saja ke contohnya:
+Note: hitungMaju, hitungMundur, dan hitungan itu adalah nama variabel untuk menyimpan perhitungan loop (i)
+### Perulangan jika
 ```
-fungsi perkenalan perlu nama
-tulis "Halo nama saya ".nama
-akhiri fungsi
+ingat angka adalah 0
 
-jalankan perkenalan dengan "Rafie"
-jalankan perkenalan dengan "Budi"
-jalankan perkenalan dengan "Joko"
+ulangi jika angka kurang-dari 10
+tulis angka
+angka adalah angka+1
+tutup perulangan
 ```
-Maka akan menghasilkan:
+Hasil
 ```
-Halo nama saya Rafie
-Halo nama saya Budi
-Halo nama saya Joko
-```
-untuk mendeklarasikan parameter, kamu bisa menulis kata "perlu" kemudian diiringi dengan nama parameternya. Kemudian untuk mengisi nilai parameter, kamu bisa menulis kata "dengan" diiringi dengan data yang ingin kamu isi ke parameternya. Jumlah parameter pada fungsi bisa lebih dari satu, contoh:
-```
-fungsi hitungLuasBalok perlu panjang lebar tinggi
-tulis "Luas balok adalah " & panjang*lebar*tinggi
-akhiri fungsi
-
-jalankan hitungLuasBalok dengan 5 7 8
-jalankan hitungLuasBalok dengan 2 3 9
-jalankan hitungLuasBalok dengan 7 10 8
-```
-Maka akan menghasilkan
-```
-Luas balok adalah 280
-Luas balok adalah 54
-Luas balok adalah 560
+0
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
 ```
